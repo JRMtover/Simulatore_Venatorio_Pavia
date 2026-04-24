@@ -9,9 +9,12 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Esame Venatorio">
 <title>Simulatore Esame Venatorio · Lombardia</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-s6eI9GmGqpQzmYP69BAYNBERu59ZERbrMV2AReG4nBE='; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; manifest-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests;">
+<meta name="referrer-policy" content="strict-origin-when-cross-origin">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=(), gyroscope=(), accelerometer=(), magnetometer=(), picture-in-picture=(), fullscreen=()">
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" crossorigin="anonymous">
 
 <style>
 /* ── RESET & BASE ── */
@@ -1181,7 +1184,7 @@ body.offline .offline-badge { display: inline-block; }
       <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
     </div>
     <div class="login-error" id="login-error">Nome utente o codice di sicurezza non validi.</div>
-    <button class="btn-primary" id="login-btn" onclick="attemptLogin()">Accedi →</button>
+    <button class="btn-primary" id="login-btn" data-action="login" type="button">Accedi →</button>
     <hr class="login-divider">
     <p class="login-footer">Accesso riservato · Sezione di Pavia</p>
   </div>
@@ -1194,7 +1197,7 @@ body.offline .offline-badge { display: inline-block; }
       ⚙️ Pannello Amministrazione
       <span class="admin-badge">Admin</span>
     </div>
-    <button class="admin-close-btn" onclick="closeAdmin()">✕ Esci</button>
+    <button class="admin-close-btn" data-action="close-admin" type="button">✕ Esci</button>
   </div>
   <div class="admin-body">
     <div class="admin-info-box">
@@ -1211,7 +1214,7 @@ body.offline .offline-badge { display: inline-block; }
         <label>Codice Sicurezza</label>
         <input type="text" id="admin-new-code" placeholder="es. abc123">
       </div>
-      <button class="admin-add-btn" onclick="adminAddUser()">+ Aggiungi</button>
+      <button class="admin-add-btn" data-action="admin-add" type="button">+ Aggiungi</button>
     </div>
     <div class="admin-section-title">Utenti autorizzati</div>
     <table class="admin-user-table" id="admin-user-table">
@@ -1243,13 +1246,13 @@ body.offline .offline-badge { display: inline-block; }
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="nav-menu-chevron"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           <div class="nav-dropdown" id="nav-dropdown">
-            <button class="nav-dropdown-item active" id="nav-item-home" onclick="navTo('home')">
+            <button class="nav-dropdown-item active" id="nav-item-home" data-action="nav" data-page="home" type="button">
               <span class="nav-item-icon">&#127968;</span> Home
             </button>
-            <button class="nav-dropdown-item" id="nav-item-stats" onclick="navTo('stats')">
+            <button class="nav-dropdown-item" id="nav-item-stats" data-action="nav" data-page="stats" type="button">
               <span class="nav-item-icon">&#128202;</span> Statistiche
             </button>
-            <button class="nav-dropdown-item" id="nav-item-contenuti" onclick="navTo('contenuti')">
+            <button class="nav-dropdown-item" id="nav-item-contenuti" data-action="nav" data-page="contenuti" type="button">
               <span class="nav-item-icon">&#128194;</span> Contenuti
             </button>
           </div>
@@ -2097,7 +2100,7 @@ function render(){
       if (i === q.c) cls += ' correct';
       else if (i === ans && ans !== q.c) cls += ' wrong';
     }
-    return `<button class="${cls}" onclick="answer(${i})" ${ans!==null?'disabled':''}><span class="opt-letter">${letters[i]}</span><span>${opt}</span></button>`;
+    return `<button class="${cls}" data-action="answer" data-index="${i}" ${ans!==null?'disabled':''}><span class="opt-letter">${letters[i]}</span><span>${opt}</span></button>`;
   }).join('');
 
   const isLast = current === quiz.length - 1;
@@ -2114,11 +2117,11 @@ function render(){
       ${feedbackHtml}
     </div>
     <div class="nav-row">
-      <button class="nav-btn" onclick="go(-1)" ${current===0?'disabled':''}>← Indietro</button>
+      <button class="nav-btn" data-action="go" data-dir="-1" ${current===0?'disabled':''}>← Indietro</button>
       <span class="counter">${answered} / ${quiz.length}</span>
       ${isLast
-        ? `<button class="nav-btn primary" onclick="finish()" ${!allAnswered?'disabled':''}>Termina ✓</button>`
-        : `<button class="nav-btn${ans!==null?' primary':''}" onclick="go(1)">Avanti →</button>`
+        ? `<button class="nav-btn primary" data-action="finish" ${!allAnswered?'disabled':''}>Termina ✓</button>`
+        : `<button class="nav-btn${ans!==null?' primary':''}" data-action="go" data-dir="1">Avanti →</button>`
       }
     </div>
     ${isLast && !allAnswered ? `<p class="finish-hint">Rispondi a tutte le domande per terminare</p>` : ''}
@@ -2198,7 +2201,7 @@ function renderResults(app){
       ${secBarsHtml}
     </div>
     ${reviewHtml}
-    <button class="btn-restart" onclick="restart()">Nuova simulazione ↺</button>
+    <button class="btn-restart" data-action="restart" type="button">Nuova simulazione ↺</button>
   `;
 }
 
@@ -2233,7 +2236,7 @@ function renderWelcome() {
         <div class="sections-list-title">Composizione del test</div>
         ${sec}
       </div>
-      <button class="btn-primary" onclick="startExam()">Inizia simulazione →</button>
+      <button class="btn-primary" data-action="start-exam" type="button">Inizia simulazione →</button>
     </div>
   `;
 }
@@ -2254,7 +2257,7 @@ function renderContenuti() {
     return;
   }
   const listHtml = CONTENT_FILES.map((file, idx) => `
-      <button class="contenuti-file${idx === selectedPdfIndex ? ' active' : ''}" onclick="selectPdf(${idx})">
+      <button class="contenuti-file${idx === selectedPdfIndex ? ' active' : ''}" data-action="select-pdf" data-index="${idx}" type="button">
         ${file.title}
       </button>
     `).join('');
@@ -2450,7 +2453,7 @@ function renderAdminTable() {
       <td><span class="user-tag ${u.type}">${u.type === 'base' ? 'Base' : 'Aggiunto'}</span></td>
       <td>
         <button class="admin-del-btn" ${u.type === 'base' ? 'disabled title="Gli utenti base sono nel codice"' : ''}
-          onclick="adminDeleteUser(${i})">
+          data-action="admin-delete" data-index="${i}" type="button">
           Rimuovi
         </button>
       </td>
@@ -2573,6 +2576,52 @@ function toggleNavMenu() {
 }
 document.addEventListener('click', e => {
   if (!document.getElementById('nav-menu-wrap').contains(e.target)) closeNavMenu();
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+
+  switch (btn.dataset.action) {
+    case 'login':
+      attemptLogin();
+      break;
+    case 'close-admin':
+      closeAdmin();
+      break;
+    case 'admin-add':
+      adminAddUser();
+      break;
+    case 'nav':
+      navTo(btn.dataset.page || 'home');
+      break;
+    case 'answer':
+      answer(Number(btn.dataset.index));
+      break;
+    case 'go':
+      go(Number(btn.dataset.dir));
+      break;
+    case 'finish':
+      finish();
+      break;
+    case 'restart':
+      restart();
+      break;
+    case 'start-exam':
+      startExam();
+      break;
+    case 'select-pdf':
+      selectPdf(Number(btn.dataset.index));
+      break;
+    case 'admin-delete':
+      adminDeleteUser(Number(btn.dataset.index));
+      break;
+    case 'clear-stats':
+      if (confirm('Cancellare tutti i dati statistici?')) {
+        clearStats();
+        renderStats();
+      }
+      break;
+    default:
+      break;
+  }
 });
 
 // ── STATS PAGE ──
@@ -2801,7 +2850,7 @@ function renderStats() {
         </div>
       </div>
 
-      <button class="btn-clear" onclick="if(confirm('Cancellare tutti i dati statistici?')){clearStats();renderStats();}">
+      <button class="btn-clear" data-action="clear-stats" type="button">
         🗑 Cancella tutti i dati statistici
       </button>
     </div>`;
