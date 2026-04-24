@@ -1,0 +1,2816 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a1a18">
+<meta name="description" content="Simulatore esame abilitazione venatoria Lombardia — Sezione di Pavia">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Esame Venatorio">
+<title>Simulatore Esame Venatorio · Lombardia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+<style>
+/* ── RESET & BASE ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:        #1c1c1a;
+  --ink-mid:    #4a4a46;
+  --ink-light:  #8a8a84;
+  --ink-faint:  #c8c8c0;
+  --paper:      #f7f5f0;
+  --paper-warm: #ede9e0;
+  --paper-dark: #e2ddd4;
+  --accent:     #2d5a1b;
+  --accent-bg:  #eaf3de;
+  --danger:     #8b1e1e;
+  --danger-bg:  #fbeaea;
+  --blue:       #1d4e8f;
+  --blue-light: #e8eef8;
+  --border:     rgba(28,28,26,0.12);
+  --border-med: rgba(28,28,26,0.20);
+  --radius-sm:  6px;
+  --radius:     10px;
+  --radius-lg:  16px;
+  --shadow-sm:  0 1px 3px rgba(28,28,26,0.08);
+  --shadow:     0 2px 8px rgba(28,28,26,0.10);
+  --shadow-lg:  0 4px 20px rgba(28,28,26,0.12);
+  --font-serif: 'Libre Baskerville', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+  --transition: 0.18s ease;
+}
+
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family: var(--font-sans);
+  background: #2a4421;
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LAYOUT ── */
+.shell {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.topbar-logo {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-mid);
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+}
+.topbar-logo strong {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--ink);
+  font-size: 14px;
+}
+.topbar-progress-wrap {
+  flex: 1;
+  max-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.topbar-progress-label {
+  font-size: 11px;
+  color: var(--ink-light);
+  font-variant-numeric: tabular-nums;
+}
+.topbar-progress-track {
+  width: 100%;
+  height: 3px;
+  background: var(--paper-dark);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.topbar-progress-fill {
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── MAIN CONTENT ── */
+.main {
+  padding: 24px 0 40px;
+}
+
+/* ── WELCOME SCREEN ── */
+.welcome {
+  padding: 32px 0;
+}
+.welcome-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+  display: block;
+}
+.welcome-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.welcome-sub {
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.info-tile {
+  background: var(--paper-warm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.info-tile-num {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.info-tile-lbl {
+  font-size: 11px;
+  color: var(--ink-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.sections-list {
+  margin-bottom: 28px;
+}
+.sections-list-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.section-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.section-row:last-child { border-bottom: none; }
+.section-row-name { color: var(--ink); }
+.section-row-count { color: #ffffff; font-variant-numeric: tabular-nums; }
+
+/* ── START BUTTON ── */
+.btn-primary {
+  display: block;
+  width: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  letter-spacing: 0.01em;
+}
+.btn-primary:hover { background: var(--paper-warm); }
+.btn-primary:active { transform: scale(0.99); }
+.btn-primary:disabled { opacity: 0.4; cursor: default; }
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
+}
+.q-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.section-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--paper-warm);
+  color: var(--ink-mid);
+  border: 1px solid var(--border);
+}
+.q-num {
+  font-size: 12px;
+  color: var(--ink-light);
+  font-variant-numeric: tabular-nums;
+}
+.q-text {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+/* ── OPTIONS ── */
+.opt-btn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  color: var(--ink);
+  cursor: pointer;
+  margin-bottom: 7px;
+  transition: background var(--transition), border-color var(--transition);
+  line-height: 1.5;
+}
+.opt-btn:last-of-type { margin-bottom: 0; }
+.opt-btn:hover:not(:disabled) {
+  background: var(--paper-warm);
+  border-color: var(--border-med);
+}
+.opt-btn:disabled { cursor: default; }
+.opt-letter {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--paper-dark);
+  color: var(--ink-mid);
+  font-size: 11px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+  transition: background var(--transition), color var(--transition);
+}
+.opt-btn.correct {
+  background: var(--accent-bg);
+  border-color: #639922;
+  color: #27500A;
+}
+.opt-btn.correct .opt-letter {
+  background: #639922;
+  color: white;
+}
+.opt-btn.wrong {
+  background: var(--danger-bg);
+  border-color: #c0392b;
+  color: var(--danger);
+}
+.opt-btn.wrong .opt-letter {
+  background: #c0392b;
+  color: white;
+}
+.opt-btn.missed {
+  background: var(--accent-bg);
+  border-color: #639922;
+  color: #27500A;
+}
+.opt-btn.missed .opt-letter {
+  background: #639922;
+  color: white;
+}
+
+/* ── FEEDBACK ── */
+.feedback {
+  font-size: 12px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.feedback.correct { background: var(--accent-bg); color: #27500A; }
+.feedback.wrong { background: var(--danger-bg); color: var(--danger); }
+.feedback-icon { font-size: 14px; flex-shrink: 0; }
+
+/* ── NAV ROW ── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.nav-btn {
+  background: var(--paper);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm);
+  padding: 9px 18px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  font-weight: 400;
+}
+.nav-btn:hover:not(:disabled) { background: var(--paper-warm); }
+.nav-btn:disabled { opacity: 0.35; cursor: default; }
+.nav-btn.primary {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+  font-weight: 500;
+}
+.nav-btn.primary:hover { background: var(--ink-mid); border-color: var(--ink-mid); }
+.counter {
+  font-size: 12px;
+  color: var(--ink-light);
+  font-variant-numeric: tabular-nums;
+}
+.finish-hint {
+  font-size: 11px;
+  color: var(--ink-light);
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* ── RESULTS ── */
+.results-header {
+  margin-bottom: 24px;
+}
+.results-title {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  color: var(--ink-light);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+.verdict {
+  font-family: var(--font-serif);
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.verdict.pass { color: var(--accent); }
+.verdict.fail { color: var(--danger); }
+.verdict-sub {
+  font-size: 14px;
+  color: var(--ink-mid);
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.stat-card {
+  background: var(--paper-warm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 10px;
+  text-align: center;
+}
+.stat-num {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-lbl {
+  font-size: 10px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── SECTION BARS ── */
+.section-stats {
+  background: var(--paper-warm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 20px;
+}
+.section-stats-title {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+}
+.sec-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.sec-bar-row:last-child { margin-bottom: 0; }
+.sec-bar-name {
+  font-size: 12px;
+  color: var(--ink-mid);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+.sec-bar-track {
+  flex: 1;
+  height: 5px;
+  background: var(--paper-dark);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sec-bar-fill {
+  height: 5px;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+.sec-bar-score {
+  font-size: 12px;
+  color: var(--ink-light);
+  min-width: 40px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── REVIEW ── */
+.review-section { margin-bottom: 20px; }
+.review-title {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-light);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.review-item {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.review-item.wrong-item {
+  border-left: 3px solid var(--danger);
+  background: rgba(225,130,114,0.16);
+}
+.review-q {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+.review-ans {
+  font-size: 12px;
+  color: var(--ink-light);
+  margin-bottom: 2px;
+}
+.review-ans span.c { color: var(--accent); font-weight: 500; }
+.review-ans span.w { color: var(--danger); font-weight: 500; text-decoration: line-through; }
+
+/* ── RESTART ── */
+.btn-restart {
+  display: block;
+  width: 100%;
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: var(--radius);
+  padding: 14px 20px;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  text-align: center;
+  margin-bottom: 40px;
+}
+.btn-restart:hover { background: var(--ink-mid); }
+.btn-restart:active { transform: scale(0.99); }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.q-card, .welcome { animation: fadeSlideIn 0.22s ease both; }
+
+/* ── MOBILE ── */
+@media (max-width: 480px) {
+  .topbar-logo { font-size: 12px; }
+  .welcome-title { font-size: 20px; }
+  .info-grid { grid-template-columns: 1fr 1fr; }
+  .q-text { font-size: 14px; }
+  .opt-btn { font-size: 13px; }
+  .verdict { font-size: 30px; }
+}
+
+/* ── OFFLINE BADGE ── */
+.offline-badge {
+  display: none;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--paper-dark);
+  color: var(--ink-light);
+}
+body.offline .offline-badge { display: inline-block; }
+
+/* ── INSTALL PROMPT ── */
+.install-banner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--blue-light);
+  border: 1px solid rgba(29,78,143,0.2);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--blue);
+}
+.install-banner.show { display: flex; }
+.install-btn {
+  flex-shrink: 0;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 6px 14px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  font-weight: 500;
+}
+.install-close {
+  background: none;
+  border: none;
+  color: var(--ink-light);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  line-height: 1;
+}
+
+/* ── TOPBAR RIGHT ── */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ── NAV MENU DROPDOWN ── */
+.nav-menu-wrap {
+  position: relative;
+}
+.nav-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--paper-warm);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+.nav-menu-btn:hover { background: var(--paper-dark); }
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 160px;
+  background: var(--paper);
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: none;
+  z-index: 100;
+  animation: dropIn 0.15s ease both;
+}
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nav-dropdown.open { display: block; }
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 11px 14px;
+  background: none;
+  border: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition);
+  border-bottom: 1px solid var(--border);
+}
+.nav-dropdown-item:last-child { border-bottom: none; }
+.nav-dropdown-item:hover { background: var(--paper-warm); }
+.nav-dropdown-item.active { background: var(--paper-warm); font-weight: 500; }
+.nav-item-icon { font-size: 14px; }
+
+/* ── CONTENUTI PAGE ── */
+.contenuti-page { padding: 8px 0 40px; }
+.contenuti-list {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+.contenuti-file {
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--paper-warm);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+.contenuti-file:hover { background: var(--paper); }
+.contenuti-file.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.pdf-viewer {
+  width: 100%;
+  min-height: 640px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--paper);
+}
+.pdf-embed {
+  width: 100%;
+  height: 100%;
+  min-height: 640px;
+  border: 0;
+}
+
+/* ── STATS PAGE ── */
+.stats-page { padding: 8px 0 40px; }
+.stats-page-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.stats-page-sub {
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-bottom: 24px;
+}
+.stats-empty {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--ink-light);
+  font-size: 14px;
+}
+.stats-empty-icon { font-size: 36px; display: block; margin-bottom: 12px; }
+
+/* ── STATS KPI GRID ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.kpi-tile {
+  background: var(--paper-warm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.kpi-num {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.kpi-num.good { color: var(--accent); }
+.kpi-num.warn { color: #c07a00; }
+.kpi-num.bad  { color: var(--danger); }
+.kpi-lbl {
+  font-size: 11px;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── CHART CARDS ── */
+.chart-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+.chart-card-title {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-light);
+  margin-bottom: 16px;
+}
+.chart-svg { width: 100%; overflow: visible; }
+
+/* ── SECTION ACCURACY BARS ── */
+.section-acc-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.section-acc-row:last-child { margin-bottom: 0; }
+.section-acc-name {
+  font-size: 12px;
+  color: var(--ink-mid);
+  min-width: 110px;
+  flex-shrink: 0;
+}
+.section-acc-track {
+  flex: 1;
+  height: 8px;
+  background: var(--paper-dark);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+.section-acc-fill {
+  height: 8px;
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  left: 0; top: 0;
+}
+.section-acc-pct {
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 36px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── STRENGTH/WEAKNESS ── */
+.strength-weakness {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.sw-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.sw-card.strength { background: #f0f7e8; border-color: rgba(99,153,34,0.3); }
+.sw-card.weakness { background: #fdf0f0; border-color: rgba(160,45,45,0.3); }
+.sw-title {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 8px;
+}
+.sw-card.strength .sw-title { color: var(--accent); }
+.sw-card.weakness .sw-title { color: var(--danger); }
+.sw-item {
+  font-size: 12px;
+  color: var(--ink);
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.sw-item:last-child { border-bottom: none; }
+.sw-item-pct { font-weight: 500; font-variant-numeric: tabular-nums; }
+
+/* ── CLEAR DATA BUTTON ── */
+.btn-clear {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--ink-light);
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all var(--transition);
+}
+.btn-clear:hover { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+
+/* ── TREND BADGE ── */
+.trend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.trend-badge.up   { background: #eaf3de; color: var(--accent); }
+.trend-badge.down { background: var(--danger-bg); color: var(--danger); }
+.trend-badge.flat { background: var(--paper-dark); color: var(--ink-light); }
+
+
+/* ══════════════════════════════════════
+   LOGIN SCREEN
+══════════════════════════════════════ */
+#login-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--paper);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeSlideIn 0.3s ease both;
+}
+.login-box {
+  width: 100%;
+  max-width: 360px;
+}
+.login-crest {
+  font-size: 36px;
+  margin-bottom: 20px;
+  display: block;
+}
+.login-title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.login-sub {
+  font-size: 13px;
+  color: var(--ink-light);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+.login-field {
+  margin-bottom: 14px;
+}
+.login-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-mid);
+  margin-bottom: 6px;
+}
+.login-field input {
+  width: 100%;
+  padding: 11px 13px;
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--ink);
+  background: white;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.login-field input:focus {
+  border-color: var(--ink-mid);
+  box-shadow: 0 0 0 3px rgba(167,205,95,0.18);
+}
+.login-error {
+  font-size: 12px;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid rgba(139,30,30,0.2);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  margin-bottom: 14px;
+  display: none;
+}
+.login-error.show { display: block; }
+.login-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0 14px;
+}
+.login-footer {
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-align: center;
+  margin-top: 16px;
+  user-select: none;
+}
+
+/* ══════════════════════════════════════
+   ADMIN PANEL
+══════════════════════════════════════ */
+#admin-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--paper);
+  z-index: 998;
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+}
+#admin-screen.open { display: flex; }
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  background: var(--ink);
+  color: white;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  flex-shrink: 0;
+}
+.admin-topbar-title {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.admin-badge {
+  font-size: 10px;
+  font-weight: 500;
+  background: #c0392b;
+  color: white;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.admin-close-btn {
+  background: rgba(6, 103, 19, 0.653);
+  border: none;
+  color: white;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.admin-close-btn:hover { background: rgba(255, 255, 255, 0.22); }
+.admin-body {
+  padding: 24px 20px 40px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+.admin-section-title {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-light);
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.admin-add-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 8px;
+  margin-bottom: 24px;
+  align-items: end;
+}
+.admin-add-form input {
+  padding: 9px 11px;
+  border: 1px solid var(--border-med);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--ink);
+  background: white;
+  outline: none;
+}
+.admin-add-form input:focus {
+  border-color: var(--ink-mid);
+  box-shadow: 0 0 0 3px rgba(28,28,26,0.07);
+}
+.admin-add-form label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-mid);
+  margin-bottom: 5px;
+}
+.admin-add-btn {
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition);
+  align-self: end;
+}
+.admin-add-btn:hover { background: var(--ink-mid); }
+.admin-user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+.admin-user-table th {
+  text-align: left;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-light);
+  padding: 0 10px 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.admin-user-table td {
+  padding: 10px 10px 10px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink);
+  vertical-align: middle;
+}
+.admin-user-table tr:last-child td { border-bottom: none; }
+.user-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-weight: 500;
+  margin-left: 6px;
+}
+.user-tag.base { background: var(--paper-dark); color: var(--ink-mid); }
+.user-tag.added { background: var(--accent-bg); color: var(--accent); }
+.admin-del-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: var(--ink-light);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: all var(--transition);
+}
+.admin-del-btn:hover { background: var(--danger-bg); border-color: var(--danger); color: var(--danger); }
+.admin-del-btn:disabled { opacity: 0.3; cursor: default; }
+.admin-info-box {
+  background: var(--blue-light);
+  border: 1px solid rgba(29,78,143,0.2);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-size: 12px;
+  color: var(--blue);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.admin-success {
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  border: 1px solid rgba(45,90,27,0.2);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  display: none;
+}
+.admin-success.show { display: block; animation: fadeSlideIn 0.2s ease; }
+
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="login-screen">
+  <div class="login-box">
+    <span class="login-crest">🦆</span>
+    <h1 class="login-title">Simulatore Esame Venatorio</h1>
+    <p class="login-sub">Lombardia · Sezione di Pavia<br>Accedi con le tue credenziali per continuare.</p>
+    <div class="login-field">
+      <label>Nome Utente</label>
+      <input type="text" id="login-username" placeholder="Inserisci nome utente" autocomplete="username" autocapitalize="none">
+    </div>
+    <div class="login-field">
+      <label>Codice Sicurezza</label>
+      <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="login-error" id="login-error">Nome utente o codice di sicurezza non validi.</div>
+    <button class="btn-primary" id="login-btn" onclick="attemptLogin()">Accedi →</button>
+    <hr class="login-divider">
+    <p class="login-footer">Accesso riservato · Sezione di Pavia</p>
+  </div>
+</div>
+
+<!-- ══ ADMIN PANEL ══ -->
+<div id="admin-screen">
+  <div class="admin-topbar">
+    <div class="admin-topbar-title">
+      ⚙️ Pannello Amministrazione
+      <span class="admin-badge">Admin</span>
+    </div>
+    <button class="admin-close-btn" onclick="closeAdmin()">✕ Esci</button>
+  </div>
+  <div class="admin-body">
+    <div class="admin-info-box">
+      ℹ️ Gli utenti <strong>base</strong> sono inclusi nel codice del file. Gli utenti <strong>aggiunti</strong> sono salvati nel browser (localStorage) e persistono su questo dispositivo. Per condividere nuovi utenti su altri dispositivi, aggiungi lo stesso utente lì.
+    </div>
+    <div class="admin-section-title">Aggiungi nuovo utente</div>
+    <div class="admin-success" id="admin-success">Utente aggiunto con successo!</div>
+    <div class="admin-add-form">
+      <div>
+        <label>Nome Utente</label>
+        <input type="text" id="admin-new-user" placeholder="es. Mario">
+      </div>
+      <div>
+        <label>Codice Sicurezza</label>
+        <input type="text" id="admin-new-code" placeholder="es. abc123">
+      </div>
+      <button class="admin-add-btn" onclick="adminAddUser()">+ Aggiungi</button>
+    </div>
+    <div class="admin-section-title">Utenti autorizzati</div>
+    <table class="admin-user-table" id="admin-user-table">
+      <thead><tr><th>Nome Utente</th><th>Codice</th><th>Tipo</th><th></th></tr></thead>
+      <tbody id="admin-user-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="shell">
+    <div class="topbar-inner">
+      <div class="topbar-logo">
+        <strong>Esame Venatorio</strong><br>
+        Lombardia · Sez. Pavia
+      </div>
+      <div class="topbar-right">
+        <span class="offline-badge">● Offline</span>
+        <div class="topbar-progress-wrap" id="topbar-progress" style="display:none">
+          <span class="topbar-progress-label" id="progress-label">0 / 30</span>
+          <div class="topbar-progress-track">
+            <div class="topbar-progress-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="nav-menu-wrap" id="nav-menu-wrap">
+          <button class="nav-menu-btn" id="nav-menu-btn" aria-label="Menu navigazione">
+            <span class="nav-menu-label" id="nav-menu-label">Home</span>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="nav-menu-chevron"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-dropdown" id="nav-dropdown">
+            <button class="nav-dropdown-item active" id="nav-item-home" onclick="navTo('home')">
+              <span class="nav-item-icon">&#127968;</span> Home
+            </button>
+            <button class="nav-dropdown-item" id="nav-item-stats" onclick="navTo('stats')">
+              <span class="nav-item-icon">&#128202;</span> Statistiche
+            </button>
+            <button class="nav-dropdown-item" id="nav-item-contenuti" onclick="navTo('contenuti')">
+              <span class="nav-item-icon">&#128194;</span> Contenuti
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="shell">
+  <main class="main">
+    <!-- Install Banner -->
+    <div class="install-banner" id="install-banner">
+      <span>📲 Installa l'app per usarla offline</span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="install-btn" id="install-btn">Installa</button>
+        <button class="install-close" id="install-close">✕</button>
+      </div>
+    </div>
+    <div id="quiz-view"></div>
+  </main>
+</div>
+
+<script>
+// ── DATA ──
+const SECTIONS = [
+  {name:"Zoologia e cinofilia", short:"Zoologia", q:[]},
+  {name:"Armi e munizioni", short:"Armi", q:[]},
+  {name:"Pronto soccorso", short:"Pronto soccorso", q:[]},
+  {name:"Legislazione venatoria", short:"Legislazione", q:[]},
+  {name:"Tutela della natura", short:"Tutela natura", q:[]}
+];
+
+const CONTENT_FILES = [
+  { title: 'PRESENTAZIONE CORSO', url: './Presentazioni/PRESENTAZIONE CORSO.pdf' },
+  { title: 'Corso Armi', url: './Presentazioni/CorsoArmi.pdf' },
+  { title: 'Cani da Caccia', url: './Presentazioni/CaniDaCaccia.pdf' },
+  { title: 'Tutela della Natura', url: './Presentazioni/CorsoTutelaNatura.pdf' },
+  { title: 'Ecologia', url: './Presentazioni/Corso_Ecologia.pdf' },
+  { title: 'Specie cacciabili e periodi', url: './Presentazioni/Specie Cacciabili e periodi di attività venatoria.pdf' },
+  { title: 'Legislazione venatoria', url: './Presentazioni/CorsoLegislazioneVenatoria.pdf' },
+  { title: 'Primo soccorso', url: './Presentazioni/primo_soccorso_corso.pdf' },
+  { title: 'Riconoscimento fauna selvatica', url: './Presentazioni/Riconoscimento della fauna selvatica.pdf' }
+];
+let selectedPdfIndex = 0;
+
+// ── SEZIONE 1: ZOOLOGIA (141 domande) ──
+SECTIONS[0].q = [
+  {d:"Cosa sono i Fringillidi?",a:["Famiglia di uccelli dell'ordine Passeriformi","Famiglia di uccelli dell'ordine Anseriformi","Famiglia di uccelli dell'ordine Gruiformi"],c:0},
+  {d:"Perché taluni uccelli sono insettivori?",a:["Per istinto","Perché necessitano di proteine","Per proteggere l'agricoltura"],c:1},
+  {d:"Quale di questi Corvidi ha il piumaggio totalmente nero?",a:["La cornacchia grigia","La gazza","Il corvo"],c:2},
+  {d:"Perché solitamente la lepre si alimenta di notte?",a:["Per diminuire il rischio di predazione","Perché è infastidita dalla luce del sole","Perché con la rugiada notturna l'erba è più digeribile"],c:0},
+  {d:"Quale di questi uccelli non è migratore?",a:["Il tordo bottaccio","La rondine","La pernice rossa"],c:2},
+  {d:"I ripopolamenti con fauna selvatica di provenienza dall'estero quali conseguenze possono portare?",a:["Miglioramento genetico","Inquinamento genetico e introduzione di malattie","Non portano particolari conseguenze"],c:1},
+  {d:"Quale di questi uccelli è un tetraonide?",a:["L'aquila reale","La coturnice","Il gallo cedrone"],c:2},
+  {d:"Quale di questi mammiferi è un cervide?",a:["Il camoscio","Il capriolo","Il muflone"],c:1},
+  {d:"Quale di questi Caradriformi presenta un lungo ciuffo di piume sulla nuca?",a:["La beccaccia","La pavoncella","Il beccaccino"],c:1},
+  {d:"Quale di queste specie è strettamente legata all'ambiente acquatico?",a:["L'allodola","La peppola","La folaga"],c:2},
+  {d:"Quale delle seguenti specie di uccelli è sedentaria?",a:["La marzaiola","La coturnice","La beccaccia"],c:1},
+  {d:"Che cosa si intende per 'doppio passo' di una specie migratrice?",a:["Una rincorsa veloce del migratore prima di levarsi in volo","Il modo di camminare del migratore quando si allontana senza usare le ali","Il duplice passaggio migratorio, in primavera e in autunno, sui nostri territori"],c:2},
+  {d:"Quale di questi animali è un ungulato?",a:["Il cinghiale","La marmotta","La volpe"],c:0},
+  {d:"Normalmente quante volte in un anno partorisce la lepre comune in pianura?",a:["Una, raramente due","Sei","Tre, raramente quattro"],c:2},
+  {d:"Di cosa si nutrono in prevalenza i rapaci notturni?",a:["Di piccoli uccelli","Di topi, ratti e altri piccoli mammiferi","Di lepri e conigli adulti"],c:1},
+  {d:"Quale specie di passero vive più facilmente a contatto con l'uomo?",a:["La passera mattugia","La passera d'Italia","La passera oltremontana"],c:1},
+  {d:"In natura quali animali sono più facilmente predati dai rapaci?",a:["Quelli giovani e debilitati","Giovani e adulti indifferentemente","Quelli adulti"],c:0},
+  {d:"Di cosa si nutre prevalentemente la volpe?",a:["Fagiani e lepri","Galline e pollame domestico","Roditori, piccoli mammiferi e uccelli"],c:2},
+  {d:"Quale di queste anatre di superficie presenta marcati sopraccigli bianchi?",a:["La marzaiola","Il germano reale","L'alzavola"],c:0},
+  {d:"Quale dei seguenti mammiferi è un bovide?",a:["Il camoscio","Il cervo","Il cinghiale"],c:0},
+  {d:"Da che cosa si stabilisce l'età nel camoscio?",a:["Dall'esame delle corna","Dalla lunghezza del pelo","Dal colore del mantello"],c:0},
+  {d:"Il cinghiale può ibridarsi col maiale?",a:["Sì","No, mai","Sì, ma produce ibridi non fecondi"],c:0},
+  {d:"Perché i piccoli di taluni mammiferi come cervidi e cinghiale hanno il mantello a strisce o a macchie?",a:["Per farsi riconoscere dagli adulti del branco","Per mimetizzarsi nell'ambiente","Per farsi riconoscere dalla madre"],c:1},
+  {d:"Fino a quale età i cinghiali mantengono il mantello a strisce?",a:["Fino a quattro settimane","Fino a diciotto mesi circa","Fino a sei mesi circa"],c:2},
+  {d:"Le femmine di cervo hanno i palchi?",a:["Sì, ma solo dal secondo anno di vita","Sì e le perdono annualmente","No, mai"],c:2},
+  {d:"Le femmine del camoscio e dello stambecco hanno le corna e le perdono ogni anno?",a:["Le hanno e non le perdono mai","Le hanno e le perdono ogni autunno","Le hanno, ma le perde solo la femmina di stambecco"],c:0},
+  {d:"Come si chiama il fenomeno per cui un volatile presenta il piumaggio parzialmente o totalmente bianco?",a:["Melanismo","Isabellismo","Albinismo"],c:2},
+  {d:"Le femmine di muflone hanno le corna?",a:["Si, molto evidenti","No","Raramente"],c:2},
+  {d:"Cos'è la muta degli uccelli?",a:["Il cambio stagionale delle penne","Una fase stagionale in cui non cantano","La fase della cova delle uova"],c:0},
+  {d:"Cosa sono gli ungulati?",a:["Sono mammiferi con grande e solida unghia","Sono uccelli con lunghe unghie","Sono mammiferi privi di unghie sviluppate"],c:0},
+  {d:"Perché alcune specie animali si dicono monogame?",a:["Perché maschio e femmina formano coppia fissa","Perché entrambi i sessi covano","Perché ogni maschio dispone di più femmine"],c:0},
+  {d:"L'usignolo è un insettivoro?",a:["Sì","No","Dipende dalla stagione dell'anno"],c:0},
+  {d:"Che tipo di cane è il setter inglese?",a:["Cane da seguita","Cane da ferma","Cane da tana"],c:1},
+  {d:"Che tipo di cane è il pointer?",a:["Cane da ferma","Cane da seguita","Cane da pista di sangue"],c:0},
+  {d:"Che tipo di cane è il segugio italiano?",a:["Cane da cerca e riporto","Cane da seguita","Cane da ferma"],c:1},
+  {d:"La caccia alla lepre con l'uso di quale cane di solito si effettua?",a:["Del bracco italiano","Dello springer spaniel","Del segugio"],c:2},
+  {d:"Dove vivono i Tetraonidi?",a:["Nelle zone umide","Nei terreni forestali collinari","Nelle zone montane alpine"],c:2},
+  {d:"Il cinghiale è:",a:["Un bovide","Un fasianide","Un suide"],c:2},
+  {d:"Il coniglio selvatico è:",a:["Un mustelide","Un leporide","Un rallide"],c:1},
+  {d:"Quale di questi ungulati è caducicorna?",a:["Il cervo","Il camoscio","Il muflone"],c:0},
+  {d:"Quali denti hanno particolarmente sviluppati i roditori?",a:["Gli incisivi","I premolari","I canini"],c:0},
+  {d:"Dove vive la lepre bianca?",a:["In zona di pianura","In zona di montagna","In zona di media collina"],c:1},
+  {d:"In che mese avviene maggiormente il ripasso o migrazione primaverile del fischione?",a:["In marzo","In maggio","In gennaio"],c:0},
+  {d:"Il fagiano di monte è:",a:["Un caradriforme","Un anseriforme","Un galliforme"],c:2},
+  {d:"In quale periodo è solitamente più abbondante il passo o migrazione autunnale della peppola?",a:["Agosto/settembre","Gennaio/febbraio","Ottobre/novembre"],c:2},
+  {d:"Cosa può distinguere a prima vista il maschio dalla femmina di cervo?",a:["Il colore del mantello","Il colore della coda","La presenza di palchi"],c:2},
+  {d:"In quale mese solitamente è più abbondante il passo o migrazione autunnale del tordo bottaccio?",a:["In agosto","In settembre","In ottobre"],c:2},
+  {d:"In quale mese è solitamente più abbondante il passo o migrazione autunnale della beccaccia?",a:["In settembre","In novembre","In gennaio"],c:1},
+  {d:"In quale mese è solitamente più abbondante il passo o migrazione autunnale dell'allodola?",a:["In settembre","In dicembre","In ottobre"],c:2},
+  {d:"In quali paesi svernano maggiormente gli uccelli migratori in Europa?",a:["Paesi nordici","Paesi centro-meridionali","Paesi nord-orientali"],c:1},
+  {d:"Quale di queste specie di anatre frequenta normalmente acque poco profonde?",a:["La moretta","La canapiglia","Il moriglione"],c:1},
+  {d:"Che cosa s'intende per territorialità di una specie?",a:["La difesa del territorio che essa mette in atto","Il territorio che essa frequenta saltuariamente","Il territorio che essa occupa in inverno"],c:0},
+  {d:"Perché gli uccelli rapaci risentono maggiormente dell'effetto dell'inquinamento da diserbanti e anticrittogamici?",a:["Perché si trovano al vertice delle catene alimentari, quindi risentono del fenomeno di accumulo di tali veleni","Perché si alimentano in prevalenza di topi e ratti che vivono in luoghi inquinati","Perché predano solamente fauna che si alimenta di semi di graminacee"],c:0},
+  {d:"Quale tra i seguenti Columbidi è di maggiori dimensioni?",a:["Tortora","Colombella","Colombaccio"],c:2},
+  {d:"Perché le femmine di molti uccelli hanno un piumaggio che si confonde con l'ambiente in cui vivono?",a:["Per mimetizzarsi e sfuggire ai predatori","Per farsi riconoscere dai maschi della specie","Per non farsi riconoscere dai maschi di altre specie"],c:0},
+  {d:"Volendo effettuare un'immissione di starne, quale dei seguenti ambienti è il più idoneo?",a:["Terreni collinari incolti e abbandonati","Foreste di pianura e pioppeti","Terreni collinari coltivati a cereali e pascoli"],c:2},
+  {d:"Che cosa si intende per nicchia ecologica?",a:["Il ruolo che l'animale svolge nel proprio ambiente","L'ambiente fisico in cui vive l'animale","La disponibilità alimentare che l'ambiente offre all'animale"],c:0},
+  {d:"Quali specie di uccelli sono più utili per l'agricoltura?",a:["Quelle onnivore","Quelle insettivore","Quelle granivore"],c:1},
+  {d:"Quali di queste specie di uccelli è autoctona sul territorio italiano?",a:["Il colino della Virginia","La coturnice orientale o chukar","La pernice rossa"],c:2},
+  {d:"Quale dei seguenti uccelli frequenta normalmente una risaia?",a:["Il beccaccino","La starna","Il tordo sassello"],c:0},
+  {d:"Quante sono le specie di Tetraonidi che vivono sulle Alpi?",a:["Quattro","Sei","Nove"],c:0},
+  {d:"Il daino è:",a:["Un cervide","Un bovide","Un suide"],c:0},
+  {d:"Quale di queste specie di uccelli è maggiormente mimetica?",a:["Il fringuello","La beccaccia","Il mestolone"],c:1},
+  {d:"In quale periodo dell'anno il camoscio perde le corna?",a:["In novembre/dicembre","In gennaio/febbraio","Mai"],c:2},
+  {d:"Dove pongono il nido i Tetraonidi?",a:["Sul terreno","Sopra i cespugli di rododendro","Sui rami di pini e abeti"],c:0},
+  {d:"La cesena in Italia è più abbondante:",a:["In estate","In inverno","In primavera"],c:1},
+  {d:"Quale parte del corpo della lepre bianca è nera durante l'inverno?",a:["Le zampe","Il naso","La punta delle orecchie"],c:2},
+  {d:"Lo sparviero si può confondere in volo con la beccaccia?",a:["Sì perché entrambi hanno il becco lungo","No, perché la beccaccia è più grande","No, perché la beccaccia ha volo più lento"],c:2},
+  {d:"Nei rapaci notturni a vista il sesso si distingue:",a:["Non è possibile alcuna distinzione","Per il diverso piumaggio","Per la mole diversa tra maschio e femmina"],c:0},
+  {d:"I piccoli di cinghiale fino a 5-6 mesi sono caratterizzati da:",a:["Mantello di colore rossastro","Mantello di colore bruno scuro","Mantello di colore giallo dorato a strisce nere parallele"],c:2},
+  {d:"Qual è il solo Fasianide europeo migratore?",a:["La pernice rossa","La starna","La quaglia"],c:2},
+  {d:"In che periodo dell'anno il piumaggio dei giovani maschi di gallo forcello si distingue nettamente da quello della madre?",a:["Mai","Tra giugno e luglio","Verso la fine di ottobre"],c:2},
+  {d:"Come sono le corna della femmina di camoscio rispetto a quelle del maschio?",a:["Più sottili, diritte e parallele","Più uncinate e divergenti","Più corte"],c:0},
+  {d:"Come si distingue in volo la femmina del gallo cedrone da quella del gallo forcello?",a:["Dal diverso piumaggio","Non occorre distinguerle poiché frequentano ambienti molto differenti","La femmina del cedrone è più grossa"],c:2},
+  {d:"La pernice bianca frequenta prevalentemente quali tipi di habitat?",a:["I boschi di conifere","I pascoli alpini inframmezzati da boschi di faggi e abeti","Gli ambienti d'alta quota oltre il limite della vegetazione arborea"],c:2},
+  {d:"Tortora e upupa sono specie migratrici nidificanti in Italia: si riconoscono facilmente in volo?",a:["Sì, perché la tortora ha il dorso bianco e nero","Sì, perché la tortora tuba anche in volo","Sì, perché l'upupa ha un caratteristico volo sfarfallante"],c:2},
+  {d:"Quale delle seguenti specie è un roditore?",a:["La marmotta","Il tasso","La faina"],c:0},
+  {d:"Quale delle seguenti specie è un mustelide?",a:["La donnola","La marmotta","La minilepre"],c:0},
+  {d:"Quale di questi uccelli non è un migratore?",a:["L'alzavola","La rondine","La starna"],c:2},
+  {d:"Quale di questi uccelli è un rapace diurno?",a:["Il gufo comune","L'allocco","Il falco pellegrino"],c:2},
+  {d:"Quale di questi uccelli è un insettivoro?",a:["Il francolino di monte","Il rondone","La marzaiola"],c:1},
+  {d:"Quale di questi uccelli non è un rapace diurno?",a:["La poiana","L'assiolo","Il falco grillaio"],c:1},
+  {d:"Il muflone appartiene alla famiglia dei:",a:["Suidi","Bovidi","Cervidi"],c:1},
+  {d:"Quale delle seguenti specie sedentarie ha collare punteggiato e sgocciolato verso il petto?",a:["La coturnice","La starna","La pernice rossa"],c:2},
+  {d:"Quale principale funzione svolgono le zone umide nei riguardi dell'avifauna selvatica?",a:["Favoriscono la sosta dei migratori acquatici","Favoriscono la nidificazione dei rapaci notturni","Favoriscono la nidificazione della fauna stanziale"],c:0},
+  {d:"C'è correlazione tra ambiente e fauna selvatica?",a:["Nessuna in particolare","Ci sono correlazioni solo in casi particolari","Sempre"],c:2},
+  {d:"Un ambiente di pianura irrigua a monocoltura come può essere arricchito ai fini faunistici?",a:["Impiantando siepi tra un appezzamento e l'altro","Ricavando pozze d'acqua per l'abbeverata","È ottimale, non occorre intervenire"],c:0},
+  {d:"Cosa significa cavicorno?",a:["Corna ramificate","Corna internamente vuote","Corna internamente piene"],c:1},
+  {d:"Cosa significa caccia di selezione?",a:["Una battuta di caccia con cacciatori scelti","Una caccia diretta ad abbattere determinati capi solo dopo censimenti della popolazione oggetto di caccia","Una caccia diretta ad abbattere solo maschi o capi debilitati o malati"],c:1},
+  {d:"Lo springer spaniel è un cane:",a:["Da ferma","Da cerca e riporto","Da riporto"],c:1},
+  {d:"Com'è da considerarsi la volpe?",a:["Specie protetta da non abbattere mai","Specie dannosa da abbattere sempre","Specie cacciabile in un determinato periodo"],c:2},
+  {d:"Quante sottospecie di lepri vivono in Lombardia?",a:["Due","Tre","Cinque"],c:0},
+  {d:"Quali mammiferi si cacciano in maniera classica con i cani da seguita?",a:["Volpe e lepre","Volpe, lepre e cinghiale","Cinghiale e capriolo"],c:1},
+  {d:"Come si definisce una collezione di uccelli imbalsamati?",a:["Ornitologica","Erpetologica","Entomologica"],c:0},
+  {d:"Il kurzhaar o bracco tedesco è un cane:",a:["Da cerca e riporto","Da ferma","Da tana"],c:1},
+  {d:"I cani da ferma in linea di massima, sono selezionati per cacciare quali specie di fauna selvatica?",a:["L'avifauna stanziale","La lepre","La volpe e il cinghiale"],c:0},
+  {d:"Quali delle seguenti specie sono cacciate in modo specifico con i cani da seguita?",a:["Beccaccia e beccaccino","Quaglia e fagiano","Lepre e cinghiale"],c:2},
+  {d:"Quali tra le seguenti razze canine sono più idonee a cacciare nelle paludi?",a:["Lo spinone italiano e il setter gordon","Il pointer e il bracco italiano","Il setter inglese e il viszla"],c:0},
+  {d:"Com'è l'andatura del pointer?",a:["Un galoppo impetuoso","Un galoppo moderato e controllato","Un trotto allungato"],c:0},
+  {d:"Com'è l'andatura del bracco italiano?",a:["Un trotto","Un galoppo","Un misto di trotto e galoppo"],c:0},
+  {d:"Che cos'è la filata?",a:["L'attenzione del cane quando percepisce l'emanazione di un selvatico","Defilarsi del cane in allontanamento dal conduttore","Seguire un solco da un capo all'altro del terreno"],c:0},
+  {d:"Che cos'è l'accostata?",a:["Il cane che si accosta al cacciatore","Il cane che si accosta al terreno di caccia","Il cane che avvicina il selvatico immobile dopo averlo fermato"],c:2},
+  {d:"Che cos'è la ferma?",a:["L'irrigidimento del cane al cospetto del selvatico","Il fermare una lepre che fugge","Fermarsi al secco richiamo del padrone"],c:0},
+  {d:"Che cos'è la ferma in bianco?",a:["È una ferma a vuoto","È una ferma su selvatico a vista","Fermarsi in attesa del conduttore"],c:0},
+  {d:"Che cos'è la ferma di consenso?",a:["Rispetto categorico di un altro cane in ferma","Fermarsi al comando del cacciatore","Fermarsi per aspettare il cane compagno di caccia"],c:0},
+  {d:"Che cos'è l'accostamento di un segugio?",a:["Accostarsi al selvatico in fuga","La cerca a contatto col conduttore","Accostare un selvatico da pelo dalla pastura al covo seguendo la passata notturna"],c:2},
+  {d:"Che cos'è la traccia?",a:["L'impronta odorosa che un selvatico lascia sul terreno","Le vestigia notturne del selvatico","Il cammino percorso da un cane in cerca"],c:0},
+  {d:"Che cos'è la canizza?",a:["Coro ben orchestrato di voci di una muta che insegue","Coro di voci di segugi che accostano","Vociare di cani impazienti di essere sguinzagliati sulla traccia"],c:0},
+  {d:"È difetto per un segugio non dare voce sulla pastura cacciando la lepre comune?",a:["Sì","No","È un pregio"],c:0},
+  {d:"Come uno springer spaniel segnala la vicinanza di un selvatico?",a:["Irrigidendosi nella ferma","Agitando freneticamente la coda","Fermandosi ad attendere il conduttore"],c:1},
+  {d:"Qual è l'ambiente tipico della starna?",a:["L'alta montagna","Le zone ad agricoltura intensiva","Le zone ad agricoltura differenziata"],c:2},
+  {d:"Quale delle seguenti razze canine è utilizzata tipicamente sulla pista di sangue degli ungulati feriti?",a:["Petit bleu de gascogne","Segugio hannoveriano","Segugio italiano"],c:1},
+  {d:"La lepre comune scava cunicoli e gallerie sotterranei?",a:["Solo nel periodo invernale per maggior riparo","Mai","Tutto l'anno"],c:1},
+  {d:"Di quali aree della Lombardia la pernice rossa è specie originaria?",a:["Alte pianure brianzole","Colline moreniche del Garda","Appennino dell'Oltrepo pavese"],c:2},
+  {d:"In un volatile cosa sono le remiganti?",a:["Le penne delle ali","Le penne della coda","Le piume del corpo"],c:0},
+  {d:"In un volatile cosa sono le timoniere?",a:["Le penne delle ali","Le piume del corpo","Le penne della coda"],c:2},
+  {d:"La forma del becco di beccaccia e beccaccino è tipica delle specie:",a:["Che si alimentano di granaglie a terra","Che si alimentano di frutta sugli alberi","Che si alimentano di invertebrati nel suolo"],c:2},
+  {d:"Quale tra i seguenti Ungulati è detto monogastrico?",a:["Il camoscio","Il daino","Il cinghiale"],c:2},
+  {d:"Cosa si intende per migrazione pre-nuziale?",a:["La migrazione autunnale","La migrazione primaverile","La migrazione tardo-estiva"],c:1},
+  {d:"Cosa si intende per migrazione post-nuziale?",a:["La migrazione primaverile","La migrazione autunnale","Lo spostamento nei mesi invernali"],c:1},
+  {d:"La marzaiola sverna prevalentemente:",a:["Nell'Europa centrale","Nell'Europa meridionale","In Africa"],c:2},
+  {d:"Dove nidifica prevalentemente il tordo sassello?",a:["Europa centrale","Europa settentrionale","Nordafrica"],c:1},
+  {d:"Quale delle seguenti anatre rientra nel gruppo delle anatre di superficie?",a:["Moretta","Alzavola","Moriglione"],c:1},
+  {d:"Quante sono le anatre tuffatrici cacciabili in Italia?",a:["Due","Tre","Una"],c:0},
+  {d:"Il colombaccio è un:",a:["Columbiforme","Anseriforme","Passeriforme"],c:0},
+  {d:"La gazza è un:",a:["Anseriforme","Passeriforme","Caradriforme"],c:1},
+  {d:"La folaga è un:",a:["Anseriforme","Caradriforme","Gruiforme"],c:2},
+  {d:"La volpe è un:",a:["Suide","Canide","Mustelide"],c:1},
+  {d:"In periodo autunnale il tordo bottaccio predilige alimentarsi di:",a:["Semi e granaglie","Bacche spontanee e frutta","Invertebrati"],c:1},
+  {d:"Quale delle seguenti specie appartiene alla Famiglia dei Rallidi?",a:["Pavoncella","Porciglione","Frullino"],c:1},
+  {d:"Quale delle seguenti specie appartiene alla Famiglia dei Corvidi?",a:["Merlo","Ghiandaia","Gallinella d'acqua"],c:1},
+  {d:"Il silvilago o minilepre è specie originaria del continente:",a:["Asiatico","Americano","Europeo"],c:1},
+  {d:"Cos'è il bramito?",a:["Il richiamo emesso dal cervo maschio in epoca pre-riproduttiva per delimitare il proprio territorio","Il richiamo emesso dal muflone maschio per radunare le proprie femmine","Il lamento emesso dal cervo maschio in punto di morte"],c:0},
+  {d:"I palchi dei Cervidi sono di tessuto:",a:["Cheratinoso","Osseo","Cartilagineo"],c:1},
+  {d:"Le corna dei Bovidi sono di tessuto:",a:["Osseo","Cheratinoso","Cartilagineo"],c:1},
+  {d:"Il coniglio selvatico è una specie che vive:",a:["In colonie numerose","Individualmente","A coppie"],c:0},
+  {d:"In quale periodo dell'anno è possibile trovare in tana i cuccioli di volpe?",a:["Giugno/luglio","Settembre/ottobre","Marzo/aprile"],c:2},
+  {d:"Che forma ha il becco negli uccelli prevalentemente granivori?",a:["Lunga e appuntita","Conica","Piatta"],c:1},
+  {d:"Quale delle seguenti specie ha volo più rapido?",a:["Porciglione","Beccaccino","Allodola"],c:1},
+  {d:"Quale delle seguenti specie acquatiche deve prendere la 'rincorsa' sull'acqua prima di decollare?",a:["Il germano reale","La canapiglia","La folaga"],c:2},
+  {d:"Quale delle seguenti specie non è un Turdide?",a:["Merlo","Cesena","Storno"],c:2}
+];
+
+// ── SEZIONE 2: ARMI E MUNIZIONI (107 domande) ──
+SECTIONS[1].q = [
+  {d:"Si può lasciare il fucile da caccia in automobile chiusa e con l'antifurto inserito?",a:["Sì, ma solo se scarico","Solo nei giorni di caccia consentita","No, mai, perché reato di omessa custodia"],c:2},
+  {d:"Come si presenta l'interno di una canna rigata?",a:["Con rigature perpendicolari alla lunghezza della canna","Con rigature concentriche al vivo di volata","Con rilievi ad andamento elicoidale"],c:2},
+  {d:"Quale di questi fucili ad anima liscia è consentito?",a:["Fucile a cinque colpi","Fucile a quattro colpi","Fucile con serbatoio in grado di contenere non più di due cartucce"],c:2},
+  {d:"Qual è la distanza media di tiro utile per un fucile a canna liscia con munizione spezzata?",a:["35 metri","70 metri","90 metri"],c:0},
+  {d:"Qual è la distanza di tiro eticamente accettabile per un fucile a canna rigata di medio calibro?",a:["500 metri","200 metri","600 metri"],c:1},
+  {d:"Dove sono alloggiati i congegni di scatto e di percussione in un sovrapposto o in una doppietta?",a:["Nella bascula","Nella camera di scoppio","Nella culatta"],c:0},
+  {d:"A cosa serve la strozzatura massima della canna?",a:["Ad allargare la rosata dei pallini per tiri ravvicinati","Per il tiro a palla unica","A mantenere più compatta e unita la rosata di pallini"],c:2},
+  {d:"Quale dei seguenti fucili è vietato per la caccia in Italia?",a:["La carabina di calibro inferiore a 5,6 mm","Il sovrapposto cal. 20","Il monocanna cal. 410"],c:0},
+  {d:"Hanno diametro minore i pallini n. 10, n. 5 o n. 00?",a:["Quelli del n. 10","Quelli del n. 5","Quelli del n. 00"],c:0},
+  {d:"Come si chiama la parte posteriore della canna?",a:["Bascula","Carcassa","Culatta"],c:2},
+  {d:"Qual è la funzione dell'innesco in una cartuccia?",a:["Incendiare la polvere","Contenere i pallini","Contenere la polvere"],c:0},
+  {d:"In periodo di divieto di caccia, è possibile trasportare l'arma?",a:["Sì, purché muniti di specifica autorizzazione","Sì, purché scarica e riposta in custodia","No"],c:1},
+  {d:"Come si chiama la parte della canna di un fucile che contiene la cartuccia?",a:["Anima","Volata","Camera di cartuccia"],c:2},
+  {d:"Può essere lecitamente utilizzata un'arma da caccia appartenente a un altro cacciatore?",a:["Sì, purché sia un fucile con canna ad anima liscia","No","Sì, purché a titolo di prestito o comodato d'uso"],c:2},
+  {d:"Quale di questi componenti è a contatto dell'innesco?",a:["Il piombo","La borra","La polvere"],c:2},
+  {d:"Che cosa succede sparando con una canna parzialmente otturata?",a:["Non si incendia la polvere","Non parte il colpo","Può scoppiare la canna"],c:2},
+  {d:"Si può utilizzare munizione spezzata per la caccia agli ungulati?",a:["Sì, solo se a pallettoni","No","Solo su specie di taglia medio-piccola"],c:1},
+  {d:"Per portare il proprio fucile nei paesi membri dell'UE è necessario:",a:["Fare la licenza di caccia nello Stato estero di destinazione","Avere il permesso da parte della Regione di residenza","Avere ottenuto dalla Questura la Carta europea per arma da fuoco"],c:2},
+  {d:"Nel fucile a canna rigata quali munizioni vengono impiegate?",a:["Spezzate","A palla","Sia spezzate che a palla"],c:1},
+  {d:"Cosa è opportuno fare per ottenere una rosata più ampia in un fucile ad anima liscia?",a:["Usare canne cilindriche","Usare canne molto strozzate","Usare pallini di grande diametro"],c:0},
+  {d:"A cosa corrisponde il calibro, ad esempio 12 o 20, in un fucile con canna ad anima liscia?",a:["Al diametro della canna espresso in mm","Al peso massimo in mg della carica di polvere utilizzabile in quel fucile","Al numero di palle sferiche di diametro pari a quello della canna ricavabili da una libbra di piombo"],c:2},
+  {d:"Qual è la lunghezza di una cartuccia cal. 12 standard?",a:["65 mm","70 mm","76 mm"],c:1},
+  {d:"Qual è la lunghezza di una cartuccia cal. 12 magnum?",a:["70 mm","76 mm","89 mm"],c:1},
+  {d:"Perché un fucile a canna liscia cal. 16 viene indicato con tale numerazione?",a:["Perché il diametro interno della canna misura 16 mm","Perché il diametro interno della canna misura 16 centesimi di pollice","Perché indica il numero di sfere di piombo di diametro uguale a quello della canna necessario a formare una libbra"],c:2},
+  {d:"Per la caccia ai Turdidi quali delle seguenti cartucce sono consigliabili?",a:["Quelle con pallini n. 3 e 4","Quelle con pallini n. 5 e 6","Quelle con pallini n. 9 e 10"],c:2},
+  {d:"Cos'è la bindella del fucile?",a:["La parte che consente di misurare la distanza dal selvatico","La cinghia per portare il fucile in spalla","Un pezzo saldato sopra la canna per facilitare la mira"],c:2},
+  {d:"Cosa studia la balistica terminale?",a:["Il moto del proiettile dentro la canna","Il moto del proiettile dentro il bersaglio colpito","Il moto del proiettile nello spazio esterno"],c:1},
+  {d:"Quali pallini è opportuno utilizzare per la caccia alla lepre comune?",a:["Pallini n. 4","Pallini n. 0","Pallini n. 10"],c:0},
+  {d:"Quali pallini è opportuno utilizzare per la caccia al gallo forcello?",a:["Pallini n. 2","Pallini n. 5","Pallini n. 10"],c:1},
+  {d:"Dovendo attraversare per breve tratto una strada comunale in Lombardia, come deve essere tenuto il fucile?",a:["Carico ma in sicura","Scarico e nel fodero","Scarico"],c:2},
+  {d:"I pallini in acciaio rispetto a quelli in piombo, all'impatto si deformano:",a:["Di meno","Di più","Nella stessa misura"],c:0},
+  {d:"Quale distanza massima di tiro può ritenersi eticamente corretta con fucile a canna rigata munito di ottica di puntamento?",a:["1000 metri","600 metri","300 metri"],c:2},
+  {d:"In quale caccia può essere utile impiegare le cartucce dispersanti?",a:["Nella caccia agli acquatici in botte","Nella caccia alla beccaccia nel bosco","Nella caccia alla lepre in zone aperte"],c:1},
+  {d:"In una carabina cal. 243 il calibro è espresso in:",a:["Millimetri","Millesimi di pollice","Libbre"],c:1},
+  {d:"Quale dei seguenti calibri di fucile a canna liscia è consentito per la caccia?",a:["Cal. 4","Cal. 8","Cal. 12"],c:2},
+  {d:"Quale di questi fucili ad anima liscia è di uso consentito in zona Alpi?",a:["Semiautomatico a tre colpi","Semiautomatico a cinque colpi","Semiautomatico limitato a due colpi"],c:2},
+  {d:"In quante parti si smonta un fucile ad anima liscia?",a:["In due","In tre","In quattro"],c:1},
+  {d:"Quale dei seguenti fucili è vietato per la caccia in Italia?",a:["La carabina cal. 22","Il sovrapposto cal. 16","Il monocanna cal. 24"],c:0},
+  {d:"Come viene detto un proiettile a palla ricoperto parzialmente di rame?",a:["Camiciato","A punta soffice","Blindato"],c:1},
+  {d:"Una carabina basculante a due canne, di cui una rigata e una liscia, come viene detta?",a:["Drilling","Automatica","Billing"],c:2},
+  {d:"Che carica di pallini contiene generalmente una cartuccia supermagnum cal. 12?",a:["46 gr","Fino a 54 gr","Più di 60 gr"],c:2},
+  {d:"Qual è la funzione del collarino in un bossolo?",a:["Puramente estetica","Tenere insieme parte metallica e non metallica della cartuccia","Agganciare l'estrattore"],c:2},
+  {d:"Quante cartucce a munizione spezzata si possono detenere senza obbligo di denuncia?",a:["Massimo 1.000","Massimo 1.500","Massimo 2.000"],c:0},
+  {d:"Quale delle seguenti armi è idonea per la caccia di selezione al camoscio?",a:["Carabina semiautomatica","Carabina bolt-action","Semiautomatico a canna liscia"],c:1},
+  {d:"Quante cartucce da caccia a palla si possono detenere senza obbligo di denuncia?",a:["Massimo 50","Massimo 100","Anche una sola va denunciata"],c:2},
+  {d:"Prima di superare un fosso, cosa deve fare il cacciatore?",a:["Mettere il fucile in sicura","Smontare il fucile","Non necessita alcuna precauzione"],c:0},
+  {d:"Fino a quanti metri con fucile cal. 12 e cartuccia idonea si può abbattere un fagiano?",a:["100/150 metri","80/100 metri","30/40 metri"],c:2},
+  {d:"Quale dei seguenti fucili ad anima liscia è consentito per la caccia?",a:["Cal. 8","Cal. 10","Cal. 16"],c:2},
+  {d:"In una carabina cal. 240 Weatherby il calibro è espresso in:",a:["Millimetri","Millesimi di pollice","Centesimi di pollice"],c:1},
+  {d:"In una carabina cal. 300 Winchester il calibro è espresso in:",a:["Centesimi di pollice","Millimetri","Millesimi di pollice"],c:2},
+  {d:"Cosa blocca la sicura in un fucile ad anima liscia?",a:["Il grilletto","Il percussore","La chiave di apertura dell'arma"],c:0},
+  {d:"Quali dei seguenti pallini hanno diametro minore?",a:["Pallini n. 11","Pallini n. 9","Pallini n. 10"],c:0},
+  {d:"Per quale delle seguenti armi è consentito l'utilizzo venatorio?",a:["Carabina ad aria compressa cal. 4,5 mm","Fucile ad anima liscia cal. 36","Carabina cal. 22"],c:1},
+  {d:"Quando il vento può avere un effetto significativo sulla traiettoria di un tiro a palla?",a:["Quando soffia nella stessa direzione della traiettoria","Quando soffia trasversalmente alla traiettoria","Quando soffia in direzione opposta alla traiettoria"],c:1},
+  {d:"Che pallini sono più indicati per cacciare anatre di media taglia come mestolone e fischione?",a:["Del n. 5","Del n. 8","Del n. 10"],c:0},
+  {d:"Quale delle seguenti armi è a canna rigata?",a:["Un sovrapposto cal. 12","Un semiautomatico cal. 20","Una carabina cal. 30.06"],c:2},
+  {d:"Come si chiama la parte anteriore della canna?",a:["Bascula","Volata","Culatta"],c:1},
+  {d:"Qual è il calibro massimo consentito per la caccia nelle armi ad anima liscia?",a:["Cal. 12","Cal. 20","Cal. 36"],c:0},
+  {d:"Per quale ungulato è consentita la caccia con munizione a palla unica per canna ad anima liscia?",a:["Il capriolo","Il cinghiale","Il muflone"],c:1},
+  {d:"Quanto è lunga generalmente la canna in un fucile da caccia ad anima liscia?",a:["90 cm","70 cm","50 cm"],c:1},
+  {d:"Quando è da considerarsi in posizione di sicurezza un fucile Hammerless?",a:["Quando i cani sono abbassati","Quando i cani sono alzati","Quando l'apposita levetta è in posizione di sicurezza"],c:2},
+  {d:"Quale dei seguenti calibri è più idoneo per la caccia ai Turdidi da appostamento fisso?",a:["Il cal. 10","Il cal. 28","Il cal. 12"],c:1},
+  {d:"Per la caccia alla stanziale quale di questi calibri di fucile è preferibile?",a:["Il cal. 24","Il cal. 12","Il cal. 410"],c:1},
+  {d:"Quale dei seguenti tipi d'arma è a canna rigata?",a:["Il semiautomatico","Il sovrapposto","L'express a canne giustapposte"],c:2},
+  {d:"La denuncia di un'arma da caccia a chi deve essere presentata?",a:["Alla Questura o ai Carabinieri","Alla Polizia provinciale","Alla Regione"],c:0},
+  {d:"Quali pallini sono consigliabili per la caccia all'allodola?",a:["Del n. 10 o 11","Del n. 6 o 7","Del n. 4 o 5"],c:0},
+  {d:"Qual è la carica standard di pallini di una cartuccia cal. 20?",a:["36 gr","32 gr","24 gr"],c:2},
+  {d:"Quali pallini sono consigliabili per la caccia alla beccaccia?",a:["Del n. 3 o 4","Del n. 9 o 10","Del n. 5 o 6"],c:1},
+  {d:"Quali pallini sono consigliabili per la caccia alla starna?",a:["Del n. 3 o 4","Del n. 9 o 10","Del n. 6 o 7"],c:2},
+  {d:"Quali pallini sono consigliabili per la caccia al merlo?",a:["Del n. 10 o 11","Del n. 7 o 8","Del n. 5 o 6"],c:0},
+  {d:"Quali pallini sono consigliabili per la caccia alla quaglia?",a:["Del n. 7 o 8","Del n. 10 o 11","Del n. 4 o 5"],c:1},
+  {d:"Quali pallini sono consigliabili per la caccia all'alzavola?",a:["Del n. 8 o 9","Del n. 3 o 4","Del n. 6 o 7"],c:2},
+  {d:"Quando è consigliabile utilizzare cartucce caricate con dosi minime di polvere e piombo?",a:["A inizio stagione venatoria","In pieno inverno","Sempre"],c:0},
+  {d:"Che cos'è il raccordo tronco-conico nella canna del fucile?",a:["La parte che unisce la camera di scoppio all'anima della canna","La parte che unisce il vivo di volata con l'anima della canna","La parte che unisce la volata con la bascula"],c:0},
+  {d:"Fino a che distanza è normalmente possibile abbattere una lepre comune con pallini n. 3?",a:["40 metri","80 metri","100 metri"],c:0},
+  {d:"Fino che distanza è normalmente possibile abbattere un tordo bottaccio con pallini n. 10?",a:["60 metri","75 metri","35 metri"],c:2},
+  {d:"Fino che distanza è normalmente possibile abbattere un fagiano con pallini n. 6?",a:["90 metri","60 metri","30 metri"],c:2},
+  {d:"Come può essere la chiusura del bossolo di una cartuccia a munizione spezzata?",a:["Stellare","Piramidale","Esagonale"],c:0},
+  {d:"Di quanti grammi è all'incirca la dose normale di piombo nel cal. 12?",a:["20 gr","25 gr","32 gr"],c:2},
+  {d:"Che cos'è il borraggio in una cartuccia?",a:["L'elemento interposto tra polvere e piombo","La parte di bossolo a chiusura della cartuccia","Il fondello interno del bossolo"],c:0},
+  {d:"Quale delle seguenti strozzature in un fucile a canna liscia è maggiore?",a:["Due stelle","Tre stelle","Una stella"],c:2},
+  {d:"Durante l'esercizio venatorio è consentito portare con sé utensili da punta o da taglio?",a:["No, perché la licenza di caccia abilita solo al porto d'armi da fuoco","Sì, se sono utensili atti alle esigenze venatorie","È consentito a chi sia titolare di licenza di caccia da almeno 10 anni"],c:1},
+  {d:"Quanti colpi ha un fucile semiautomatico ad anima liscia?",a:["Uno","Due","Più di due"],c:2},
+  {d:"Con quale delle seguenti armi è consentita la caccia?",a:["Fucile cal. 22","Carabina ad aria compressa","Doppietta cal. 20"],c:2},
+  {d:"In quale forma di caccia si può utilizzare con profitto una carabina semiautomatica?",a:["Caccia al capriolo da altana","Caccia al cinghiale in braccata","Caccia al cervo al bramito"],c:1},
+  {d:"Quale di questi calibri è più potente?",a:["Il cal. 28","Il cal. 12","Il cal. 36"],c:1},
+  {d:"Che cosa s'intende per munizione spezzata?",a:["La cartuccia caricata a pallini","La cartuccia caricata a palla con frattura predisposta a schegge","La cartuccia tagliata a metà senza piombo per tiro a salve"],c:0},
+  {d:"Come sono denominate le munizioni a palla per canna rigata non contenenti piombo?",a:["Camiciate","Monolitiche","Rinforzate"],c:1},
+  {d:"Quali munizioni spezzate sono sempre vietate per la caccia nella zona Alpi?",a:["Quelle con pallini di diametro superiore a 4 mm","Quelle con pallini di diametro inferiore a 4 mm","Quelle con pallini di numerazione inferiore al 7"],c:0},
+  {d:"È consentito usare per la caccia una carabina cal. 22?",a:["Sì senza limitazioni","Mai","Sì ma solo per la caccia alla volpe"],c:1},
+  {d:"Cos'è l'asta in un fucile?",a:["Una parte dell'impugnatura","Una parte della bascula","Una parte delle canne"],c:0},
+  {d:"Dov'è la sicura in un fucile ad anima liscia a cani esterni?",a:["Sopra la croce","Di fianco al grilletto","Sono i cani abbassati"],c:2},
+  {d:"Che pallini sono consigliabili per la caccia alla cesena?",a:["Del n. 9 o 10","Del n. 6 o 7","Del n. 4 o 5"],c:0},
+  {d:"In una doppietta o un sovrapposto l'estrattore manuale sarà in:",a:["Un pezzo unico","Due pezzi","Senza il collarino"],c:0},
+  {d:"In una doppietta o un sovrapposto l'estrattore automatico sarà in:",a:["Un pezzo unico","Due pezzi","Senza il collarino"],c:1},
+  {d:"Terminata la giornata di caccia, perché è consigliabile usare i salvapercussori per scaricare l'arma?",a:["Per evitare di rompere i percussori","È solo una consuetudine","Per sbloccare la sicura"],c:0},
+  {d:"Nei fucili dotati di monogrillo meccanico, se non è partito il primo colpo può partire il secondo?",a:["Sì","No, perché la massa non aggancia il cane","No, perché si aziona la sicura"],c:1},
+  {d:"In un sovrapposto con due grilletti, premendo il primo grilletto quale canna spara?",a:["Inferiore","Superiore","Entrambe"],c:0},
+  {d:"In una doppietta o sovrapposto, che funzione ha la croce?",a:["Arma le batterie","Modifica la strozzatura","Piega il calcio"],c:0},
+  {d:"Per quale motivo si consiglia di non lasciare le batterie dell'arma cariche per un lungo periodo?",a:["Per evitare l'indebolimento della molla","Per non bloccare l'azione della sicura","Per non compromettere le chiusure"],c:0},
+  {d:"Le cartucce a palla denominate 'monolitiche' che lunghezza hanno, a parità di peso, rispetto a quelle in piombo?",a:["Sono più lunghe","Sono più corte","Sono di pari lunghezza"],c:0},
+  {d:"In un sovrapposto con strozzatura 2 stelle/1 stella come si possono allargare le rosate senza manomettere le canne?",a:["Usando cartucce dispersanti","Usando cartucce con borra contenitore","Usando cartucce con capsule rigate"],c:0},
+  {d:"Quale adempimento occorre se si detiene, anche per breve periodo, l'arma in un luogo diverso da quello di denuncia?",a:["Avvisare l'autorità di P.S.","Non occorre fare nulla","Avvisare la Prefettura"],c:0},
+  {d:"Nella caccia invernale agli acquatici da appostamento fisso è opportuno utilizzare:",a:["Strozzature accentuate e cartucce con borra contenitore","Strozzature ridotte e cartucce con borra in feltro","Non vi sono particolari prescrizioni"],c:0},
+  {d:"Nelle caccie collettive al cinghiale, cosa è opportuno indossare?",a:["Gilet o cappello o fascia ad alta visibilità per motivi di sicurezza","Indumenti molto mimetici per non essere avvistati dal selvatico","Indumenti pesanti perché sono caccie invernali"],c:0}
+];
+
+// ── SEZIONE 3: PRONTO SOCCORSO (40 domande) ──
+SECTIONS[2].q = [
+  {d:"Che cos'è l'emorragia?",a:["Fuoriuscita di sangue in abbondante quantità da una ferita","Violente scariche diarroiche","Perdita di urina"],c:0},
+  {d:"L'emorragia può essere:",a:["Solo arteriosa","Solo venosa","Arteriosa e venosa"],c:2},
+  {d:"L'emorragia arteriosa si distingue:",a:["Perché è di breve durata","Perché il sangue è di colore rosso vivo e a getto pulsante","Perché il sangue è di colore scuro"],c:1},
+  {d:"Quanti sono i tipi di emorragia?",a:["Un solo tipo (esterna)","Due tipi (esterna ed interna)","Un solo tipo (interna)"],c:1},
+  {d:"Che cosa si deve fare in presenza di un'emorragia esterna?",a:["Stendere l'infortunato e coprire le ferite","Stendere l'infortunato e farlo bere","Mettere un laccio emostatico"],c:2},
+  {d:"Che cosa è più opportuno usare per bloccare una emorragia senza disporre di laccio emostatico?",a:["Una cintura","Un maglione","Una calza di nylon"],c:0},
+  {d:"Dove si deve mettere il laccio emostatico?",a:["Direttamente sulle ferite","Deve essere messo alla radice dell'arto interessato","Nella parte più vicina al cuore"],c:1},
+  {d:"Che cos'è la ferita?",a:["Una puntura d'insetto","Una sudorazione abbondante","L'interruzione della continuità della cute"],c:2},
+  {d:"Come si cura una ferita?",a:["Occorre lavare abbondantemente con acqua e soluzioni alcaline","Aspettare che il sangue si arresti da solo","Praticare una puntura contro il dolore"],c:0},
+  {d:"A che cosa è dovuta l'asfissia?",a:["Al freddo intenso","Ad eccessiva attività sportiva","Ad insufficiente apporto di ossigeno ai tessuti"],c:2},
+  {d:"Che cos'è l'arresto cardiaco?",a:["L'arresto della motilità","L'arresto del cuore con arresto della circolazione e del respiro","La perdita temporanea di coscienza"],c:1},
+  {d:"Quali sono le cause dell'arresto cardiaco?",a:["Un eccessivo sforzo","Disturbi digestivi","Folgorazione, infarto, asfissia, gravi disturbi di cuore"],c:2},
+  {d:"Come si riconosce un arresto cardiaco?",a:["Dalla perdita di coscienza, pallore della cute, labbra e unghie cianotiche","Da uno stato euforico","Dalla mancanza di lucidità e orientamento"],c:0},
+  {d:"Cos'è l'infarto del miocardio?",a:["Spostamento del cuore","Rottura di una parte del cuore causato dalla chiusura di una arteria coronarica che porta ossigeno al cuore","Un corpo estraneo che colpisce il cuore"],c:1},
+  {d:"Come si riconosce un infarto cardiaco?",a:["Da un forte dolore muscolare","Da un forte dolore di testa","Dal dolore al torace molto forte trasmesso anche allo sterno, al braccio sinistro e/o allo stomaco"],c:2},
+  {d:"Come ci si deve comportare in presenza di un infarto cardiaco?",a:["Invitare il soggetto alla calma","Rassicurare il soggetto ed evitargli ogni minimo sforzo","Invitare il soggetto ad assumere piccole quantità di acqua fresca"],c:1},
+  {d:"Quali sono i fattori di rischio di un infarto?",a:["Grave depressione","Grave denutrizione","Fumo, alimentazione ricca di grassi, uso abbondante di sostanza alcooliche, stress"],c:2},
+  {d:"Che cosa si deve fare quando una persona sviene?",a:["Mettere la persona seduta e svestirla","Mettere la persona distesa con le gambe in alto","Caricarla sulle spalle e trasportarla alla casa più vicina"],c:1},
+  {d:"Che cos'è una frattura?",a:["È la rottura di un osso","È il cosiddetto colpo della strega","È la mancanza di un osso"],c:0},
+  {d:"Come si riconosce una frattura?",a:["Dal dolore, dalla deformità della parte colpita e da impotenza funzionale","Da un'eccessiva sudorazione e dal dolore","Dalla comparsa di febbre"],c:0},
+  {d:"Come si aiuta un soggetto fratturato?",a:["Deve essere aiutato a rialzarsi e riacquistare i movimenti","Si devono immobilizzare le fratture e trasportare la persona al più vicino ospedale","Bisogna aspettare che gli passi il dolore"],c:1},
+  {d:"Dopo una distorsione che cosa bisogna fare?",a:["Impacchi freddi e una fasciatura non stretta","Mettere il laccio emostatico","Fare compressione diretta e mettere fasciature strette"],c:0},
+  {d:"Come si può capire se una caduta ha provocato la frattura della colonna vertebrale?",a:["Dai dolori in tutte le parti del corpo","Dal formicolio alle braccia e/o alle gambe o dall'impossibilità a muovere braccia e gambe","Dalla comparsa improvvisa di febbre"],c:1},
+  {d:"È consigliabile trasportare da soli un fratturato vertebrale?",a:["Sì","No","Dipende da quale vertebra è fratturata"],c:1},
+  {d:"Che cos'è un trauma cranico?",a:["Un violento colpo al capo con lesione ossea del cranio","Uno stato di stress psicologico","Uno stato di euforia e di ebbrezza"],c:0},
+  {d:"Come si fa a riconoscere se una persona ha subito un trauma cranico?",a:["Dalla perdita di movimento delle braccia e delle gambe","Dalla perdita di coscienza, cefalea, vomito e vertigini","Dalla perdita di movimento della sola testa"],c:1},
+  {d:"Che cosa occorre fare quando una persona presenta un trauma cranico?",a:["Si deve mettere la persona sdraiata e aspettare che arrivino i soccorsi","Si deve mettere la persona sdraiata ruotata sul fianco e chiamare urgentemente soccorso","La si deve caricare a spalle in cerca di soccorso"],c:1},
+  {d:"Come si manifesta il congelamento?",a:["Da lesioni locali per l'esposizione a freddo intenso","Da lesioni locali conseguenti a forti variazioni di temperatura","Dal rossore del viso"],c:0},
+  {d:"Che cos'è l'assideramento?",a:["È la conseguenza di una mancata ossigenazione","È la conseguenza di una mancata alimentazione","È il prodotto di lesioni generali determinate da una esposizione totale a basse temperature"],c:2},
+  {d:"Quali sono le parti più colpite da congelamento?",a:["Le mani","I polmoni","Le estremità degli arti, naso e orecchio"],c:2},
+  {d:"Quali sono i sintomi di assideramento?",a:["Apatia, difficoltà del linguaggio, del movimento, pallore, difficoltà respiratorie","Euforia","Lentezza nei movimenti ed euforia"],c:0},
+  {d:"Che cos'è il colpo di calore?",a:["È una lesione da contatto con un materiale troppo caldo","È il calore che si sviluppa dopo un'abbondante libagione","Eccessivo aumento della temperatura corporea conseguente a una lunga esposizione ad alta temperatura"],c:2},
+  {d:"Quali sono i sintomi di un colpo di calore?",a:["Cute calda e secca, assenza di sudorazione, aumento del battito cardiaco, fastidio alla luce","Assenza di movimento e ansia","Stato di eccitazione"],c:0},
+  {d:"Come si deve intervenire quando un soggetto presenta un colpo di calore?",a:["Gli si deve togliere gli indumenti e lo si deve mettere in un luogo fresco facendogli bere solo acqua fresca","Lo si deve coprire con indumenti di lana","Lo si deve bagnare con acqua fresca"],c:0},
+  {d:"Come si riconosce un morso di vipera?",a:["Si riconosce da 1 solo piccolo foro","Si riconosce da 3 fori disposti a triangolo","Si riconosce da 2 piccoli fori distanti 1 cm uno dall'altro"],c:2},
+  {d:"Nei casi di morsi di vipera è necessario:",a:["Somministrare sempre siero antiofidico","Mettere il laccio emostatico a monte del morso","Effettuare un'incisione cutanea nella sede del morso"],c:1},
+  {d:"Quali sono, tra gli altri, gli accorgimenti per evitare il morso di vipera?",a:["Scegliere sentieri e luoghi frequentati, calzare scarponi e calze pesanti, battere il suolo con un bastone","Indossare scarpe da ginnastica e pantaloni leggeri","Camminare tranquillamente su sentieri frequentati senza fare eccessivo rumore"],c:0},
+  {d:"Che cos'e lo shock anafilattico?",a:["Uno shock derivante da un forte e improvviso spavento","Uno shock paralizzante derivante da un trauma","Una grave reazione allergica a rapida comparsa che può provocare il decesso"],c:2},
+  {d:"Tra le principali cause di shock anafilattico, vi sono:",a:["Punture di ragni, api e vespe","Inalazione di pollini","Scariche adrenaliniche derivanti da un forte trauma"],c:0},
+  {d:"Cosa occorre fare con un soggetto colpito da shock anafilattico?",a:["Porlo supino all'ombra con le gambe leggermente sollevate, confortandolo e rassicurandolo sull'arrivo dei soccorsi, frattanto allertati","Farlo sedere all'ombra e somministrargli acqua fresca","Fargli impacchi freschi alle parti arrossate e gonfie"],c:0}
+];
+
+// ── SEZIONE 4: LEGISLAZIONE VENATORIA (sample - 295 domande, usando tutte) ──
+SECTIONS[3].q = [
+  {d:"A chi deve essere inoltrata domanda per sostenere l'esame di abilitazione alla caccia?",a:["Alla Questura","Alla Regione","Alle associazioni venatorie"],c:1},
+  {d:"In caso di revoca della licenza di caccia, cosa occorre fare per riottenerla?",a:["Ripetere l'esame di abilitazione","Rivolgere domanda alla Regione","Rivolgere domanda al Prefetto"],c:0},
+  {d:"Durante il primo anno di caccia cosa è tenuto a fare il cacciatore?",a:["Deve farsi accompagnare dal tutore","Deve farsi accompagnare da un cacciatore che abbia la licenza da almeno tre anni","Deve farsi accompagnare da una guardia venatoria"],c:1},
+  {d:"Che validità ha la licenza di caccia?",a:["Tre anni","Sei anni","Otto anni"],c:1},
+  {d:"Quali documenti deve portare con sé il cacciatore durante l'esercizio venatorio?",a:["Solo la licenza di caccia","Licenza di caccia, tesserino regionale e assicurazione","Solo il tesserino regionale"],c:1},
+  {d:"A quale età minima è consentito esercitare la caccia?",a:["21 anni","16 anni","18 anni"],c:2},
+  {d:"Da quanti anni, come minimo, deve avere la licenza il cacciatore che accompagna chi è alla prima licenza?",a:["2 anni","3 anni","5 anni"],c:1},
+  {d:"Qual è la validità della tassa di concessione governativa per il porto di fucile uso caccia?",a:["Una stagione venatoria","365 giorni dalla data del rilascio della licenza","6 anni dalla data del primo versamento"],c:1},
+  {d:"Il cacciatore cosa deve annotare, fra l'altro, sul tesserino venatorio?",a:["I capi abbattuti","L'ora di inizio e termine della caccia","La regione nella quale si esercita la caccia"],c:0},
+  {d:"Il tesserino venatorio ha validità nazionale?",a:["Sì","No, vale solo nella regione di residenza","No, vale solo nella provincia di residenza"],c:0},
+  {d:"Chi rilascia il tesserino venatorio?",a:["La Regione","La Prefettura","La Questura"],c:0},
+  {d:"A fine stagione venatoria il tesserino venatorio:",a:["Può essere distrutto","Deve essere conservato per la stagione successiva","Va riconsegnato alla Regione che lo ha rilasciato"],c:2},
+  {d:"Come viene considerata dalla legge dello Stato la fauna selvatica?",a:["Patrimonio indisponibile dello Stato","Proprietà del conduttore del fondo dove si trova","Cosa di nessuno"],c:0},
+  {d:"Quale ente ha competenza amministrativa in materia di caccia?",a:["Il Comune","La Regione","La Comunità montana"],c:1},
+  {d:"I proventi derivanti dalle sanzioni amministrative in materia di caccia da chi vengono incamerati?",a:["Dal Ministero delle Politiche Agricole","Dalla Regione","Dai Comuni"],c:1},
+  {d:"Cosa si intende per controllo della fauna selvatica?",a:["Effettuare censimenti e conteggi delle popolazioni selvatiche a fini statistici","Effettuare interventi di riduzione delle popolazioni selvatiche tramite catture e/o abbattimenti","Effettuare un'assidua vigilanza delle popolazioni selvatiche"],c:1},
+  {d:"L'uccisione casuale di una lepre durante una falciatura è considerata esercizio di caccia?",a:["No","Sì","Solo in periodo di caccia consentita"],c:0},
+  {d:"A chi appartiene la fauna selvatica legittimamente abbattuta?",a:["A colui che l'ha abbattuta","Al proprietario del cane","Al proprietario del fondo"],c:0},
+  {d:"Quali dei seguenti animali è da considerarsi fauna selvatica?",a:["Coniglio selvatico","Ratto","Arvicola"],c:0},
+  {d:"Chi è proprietario della fauna selvatica rinvenuta morta?",a:["Chi la rinviene","Il Comune sul cui territorio è stata rinvenuta","Lo Stato"],c:2},
+  {d:"Chi emana il calendario venatorio integrativo per la zona faunistica delle Alpi?",a:["Il CAC","La Regione","La Comunità montana"],c:1},
+  {d:"Chi approva le disposizioni integrative al calendario venatorio regionale?",a:["La Giunta regionale","Il Consiglio regionale","Il coordinamento degli ATC e dei CAC"],c:0},
+  {d:"Chi rilascia il porto di fucile a uso caccia?",a:["La Regione","La Prefettura","La Questura"],c:2},
+  {d:"La fauna selvatica italiana è tutelata nell'interesse di chi?",a:["Dei cacciatori","Degli agricoltori","Di tutti i cittadini"],c:2},
+  {d:"A chi appartiene la fauna selvatica?",a:["Allo Stato","Alla Regione","A nessuno"],c:0},
+  {d:"Per superficie agro-silvo-pastorale ai fini della caccia programmata si deve intendere:",a:["Ogni parte del territorio in cui può vivere la fauna selvatica","Il territorio utilizzato a scopo agricolo e forestale","Le zone adibite al pascolo del bestiame"],c:0},
+  {d:"Per ambito territoriale di caccia s'intende:",a:["Il territorio del comune di residenza del cacciatore","Il terreno in cui si esercita solitamente la caccia","La zona delimitata sul territorio cui si è ammessi a praticare la caccia programmata"],c:2},
+  {d:"Per caccia programmata s'intende:",a:["L'esercizio venatorio che ogni cacciatore programma all'inizio della stagione","La caccia esercitata insieme ad altri cacciatori","Il prelievo venatorio in un ambito o in un comprensorio"],c:2},
+  {d:"Come viene considerata dalla legge la caccia da appostamento temporaneo rispetto all'opzione in via esclusiva?",a:["Come la caccia da appostamento fisso","Come la caccia vagante","È un'opzione a se stante"],c:1},
+  {d:"Tra le forme di caccia in via esclusiva si può scegliere:",a:["Caccia da appostamento fisso","Caccia da appostamento temporaneo","Caccia di selezione agli ungulati"],c:0},
+  {d:"La caccia programmata è estesa:",a:["A tutto il territorio nazionale","Solo alla regione Lombardia","Solo alla zona Alpi"],c:0},
+  {d:"A chi è consentito l'accesso nelle zone a caccia programmata?",a:["Solo ai cacciatori ammessi","Solo ai cacciatori residenti nella regione","Solo ai cacciatori residenti nella zona"],c:0},
+  {d:"Che cosa si intende per pianificazione territoriale in materia di caccia?",a:["La caccia esercitata in pianura","Programmare un diversificato uso del territorio in relazione alla caccia","Individuare le sole zone a divieto di caccia"],c:1},
+  {d:"Chi suddivide il territorio regionale in Ambiti territoriali e in Comprensori alpini di caccia?",a:["Il Ministero delle Politiche agricole","La Regione","Il Ministero dell'Ambiente"],c:1},
+  {d:"Che cosa sono i Comprensori alpini di caccia?",a:["Zone alpine a caccia programmata","Istituti di caccia privati","Zone a caccia vietata"],c:0},
+  {d:"Per piani di abbattimento si intende:",a:["Il prelievo complessivo di capi di avifauna migratoria consentita","Il prelievo programmato delle specie di fauna stanziale in un ambito o in un comprensorio alpino","Gli interventi del servizio di vigilanza per il controllo dei predatori"],c:1},
+  {d:"Nei comitati di gestione degli ambiti territoriali e dei comprensori alpini di caccia, sono presenti fra gli altri:",a:["I rappresentanti delle organizzazioni agricole","I rappresentanti delle organizzazioni sindacali","I rappresentanti delle associazioni di volontariato sociale"],c:0},
+  {d:"Quale delle seguenti specie è particolarmente protetta?",a:["Il riccio","Il camoscio alpino","L'aquila reale"],c:2},
+  {d:"Quale delle seguenti specie è particolarmente protetta?",a:["Il fenicottero","L'oca selvatica","Il germano reale"],c:0},
+  {d:"Quale delle seguenti specie è particolarmente protetta?",a:["Il colombaccio","La starna","Il cigno reale"],c:2},
+  {d:"Quale delle seguenti specie è particolarmente protetta?",a:["La volpe","Il capriolo","La lontra"],c:2},
+  {d:"Quale delle seguenti specie è vietato abbattere?",a:["La quaglia","La starna","Il pettirosso"],c:2},
+  {d:"Quale delle seguenti specie è vietato abbattere?",a:["La pernice rossa","Il gallo cedrone","Il gallo forcello"],c:1},
+  {d:"Quale delle seguenti specie è vietato abbattere?",a:["Il riccio","La lepre","Il cinghiale"],c:0},
+  {d:"Quale delle seguenti specie è vietato abbattere?",a:["Il germano reale","La cesena","La cincia mora"],c:2},
+  {d:"Quale delle seguenti specie è vietato abbattere?",a:["La folaga","La balia nera","La beccaccia"],c:1},
+  {d:"Quale delle seguenti specie è vietato abbattere?",a:["Il gatto selvatico","Il coniglio selvatico","La lepre bianca"],c:0},
+  {d:"Quale delle seguenti specie è particolarmente protetta?",a:["L'avvoltoio grifone","Il gallo cedrone","Il gallo forcello"],c:0},
+  {d:"Quale delle seguenti specie è particolarmente protetta?",a:["Il camoscio alpino","Il lupo","Il daino"],c:1},
+  {d:"Quale delle seguenti specie è particolarmente protetta?",a:["La pittima reale","Il cervo","La volpoca"],c:2},
+  {d:"Quale delle seguenti specie non è particolarmente protetta?",a:["La cicogna","Il verdone","L'avvoltoio monaco"],c:1},
+  {d:"Quale delle seguenti specie non è particolarmente protetta?",a:["Il cinghiale","La martora","L'orso bruno"],c:0},
+  {d:"Quale delle seguenti specie non è particolarmente protetta?",a:["Il cigno reale","Il prispolone","Il lupo"],c:1},
+  {d:"In quale periodo è cacciabile la coturnice sulle Alpi?",a:["Dal 1° novembre all'8 dicembre","Dalla terza domenica di settembre al 31 dicembre","Dal 1° ottobre al 30 novembre"],c:2},
+  {d:"Quale specie è cacciabile dal 1° ottobre al 31 dicembre o dal 1° novembre al 31 gennaio?",a:["Il cinghiale","Il cervo","Il capriolo"],c:0},
+  {d:"Per quale delle seguenti specie la caccia in Lombardia termina l'8 dicembre?",a:["La starna","La folaga","Il codone"],c:0},
+  {d:"Sino a che data si può cacciare la pernice rossa in Lombardia?",a:["31 gennaio","31 dicembre","8 dicembre"],c:2},
+  {d:"La donnola è cacciabile da quale data?",a:["Dalla terza domenica di settembre","Dall'1 novembre","Mai"],c:2},
+  {d:"La caccia alla moretta termina il:",a:["31 gennaio","31 dicembre","30 novembre"],c:0},
+  {d:"La caccia al coniglio selvatico termina il:",a:["30 novembre","31 dicembre","31 gennaio"],c:1},
+  {d:"La caccia alla cesena termina il:",a:["31 dicembre","15 dicembre","31 gennaio"],c:2},
+  {d:"Quando termina la caccia alla gallinella d'acqua?",a:["31 gennaio","20 gennaio","31 dicembre"],c:0},
+  {d:"La caccia alla pernice bianca termina il:",a:["30 novembre","31 dicembre","31 gennaio"],c:0},
+  {d:"Si può cacciare la marmotta in Lombardia?",a:["Solo nella zona faunistica delle Alpi","Sì","No"],c:2},
+  {d:"Quali delle seguenti specie è cacciabile fino al 31 gennaio?",a:["Il mestolone","Il fagiano di monte","La pispola"],c:0},
+  {d:"Quali delle seguenti specie è cacciabile fino al 31 gennaio?",a:["L'allodola","Il coniglio selvatico","Il germano reale"],c:2},
+  {d:"La caccia alla tortora termina il:",a:["30 novembre","31 gennaio","31 dicembre"],c:2},
+  {d:"Qual è il periodo di caccia dell'averla maggiore?",a:["Mai, è una specie non cacciabile","Dalla terza domenica di settembre al 31 dicembre","Dalla terza domenica di settembre al 31 gennaio"],c:0},
+  {d:"La caccia al fagiano è consentita:",a:["Dalla terza domenica di settembre al 31 gennaio","Dal 1° ottobre al 1° gennaio","Dalla terza domenica di settembre all'8 dicembre"],c:0},
+  {d:"La caccia al beccaccino termina il:",a:["31 dicembre","15 dicembre","31 gennaio"],c:2},
+  {d:"Chi può esercitare la caccia in un fondo chiuso?",a:["Il proprietario dei terreni","Gli agenti della vigilanza","Nessuno"],c:2},
+  {d:"Da quale data è cacciabile la femmina del gallo forcello?",a:["Mai","Dal 1° ottobre","Dalla terza domenica di settembre"],c:0},
+  {d:"Da quale data si può cacciare il gallo forcello?",a:["1 ottobre","Terza domenica di settembre","1 novembre"],c:0},
+  {d:"Per quale delle seguenti specie la caccia è consentita fino al 31 gennaio?",a:["Il fischione","L'allodola","La quaglia"],c:0},
+  {d:"Si può cacciare la faina?",a:["Sì","Solo il maschio","Mai"],c:2},
+  {d:"Si può cacciare la martora?",a:["Sempre perché è un predatore","Mai","Dalla terza domenica di settembre al 31 dicembre"],c:1},
+  {d:"Si può cacciare il tasso?",a:["Solo il maschio","Dal 1° ottobre al 30 novembre","Mai"],c:2},
+  {d:"Sino a che data si può cacciare la marzaiola?",a:["31 dicembre","15 gennaio","31 gennaio"],c:2},
+  {d:"Sino a che data si può cacciare la volpe?",a:["31 gennaio","30 novembre","31 dicembre"],c:0},
+  {d:"Quale delle seguenti specie è vietato abbattere?",a:["La volpe","La pernice rossa","La taccola"],c:2},
+  {d:"Sino a che data si può cacciare l'allodola?",a:["31 gennaio","31 dicembre","30 novembre"],c:1},
+  {d:"Quale specie è cacciabile dal 1° ottobre al 31 dicembre con facoltà di posticipare dal 1° novembre al 31 gennaio?",a:["Il cinghiale","Il muflone","Il camoscio"],c:0},
+  {d:"Il codirosso è cacciabile da quale data?",a:["Dal 1° ottobre","Dalla terza domenica di settembre","Mai"],c:2},
+  {d:"Il merlo acquaiolo è cacciabile da quale data?",a:["Dal 1° ottobre","Dalla terza domenica di settembre","Mai"],c:2},
+  {d:"Il rigogolo è cacciabile da quale data?",a:["Dal 1° settembre","Dalla terza domenica di settembre","Mai"],c:2},
+  {d:"Quale delle seguenti specie in Lombardia è cacciabile sino all'8 dicembre?",a:["La moretta","La folaga","La lepre"],c:2},
+  {d:"Quale delle seguenti specie è cacciabile sino al 31 gennaio?",a:["L'alzavola","Il merlo","La quaglia"],c:0},
+  {d:"Quale delle seguenti specie è cacciabile fino al 31 gennaio?",a:["Il verdone","Il codone","Il merlo"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile fino al 31 dicembre?",a:["Il tordo bottaccio","La cesena","Il merlo"],c:2},
+  {d:"Quale delle seguenti specie è cacciabile fino al 31 gennaio?",a:["La pispola","Il moriglione","La tortora"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile dalla terza domenica di settembre al 31 gennaio?",a:["Il colino della Virginia","La marzaiola","Il merlo"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile dal 1° ottobre al 30 novembre?",a:["La lepre bianca","Il cinghiale","La lepre bruna"],c:0},
+  {d:"Quale delle seguenti specie in Lombardia è cacciabile dalla terza domenica di settembre all'8 dicembre?",a:["La volpe","La starna","Il germano reale"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile dal 1 ottobre al 30 novembre?",a:["Il cinghiale","Il fagiano","La coturnice"],c:2},
+  {d:"Quale delle seguenti specie in Lombardia è cacciabile sino all'8 dicembre?",a:["La folaga","La pernice rossa","La pavoncella"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile dalla terza domenica di settembre al 31 dicembre?",a:["L'allodola","La canapiglia","Il fagiano"],c:0},
+  {d:"Quale delle seguenti specie è cacciabile dalla terza domenica di settembre al 31 dicembre?",a:["Il merlo","Il tordo bottaccio","Il frullino"],c:0},
+  {d:"Si può cacciare il gallo cedrone?",a:["Solo nella zona faunistica delle Alpi","Solo il maschio","È sempre vietato"],c:2},
+  {d:"In quale periodo è consentita la caccia alla canapiglia?",a:["Dalla terza domenica di settembre al 31 dicembre","Dalla terza domenica di settembre al 31 gennaio","Mai"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile fino al 31 gennaio?",a:["La quaglia","La folaga","La starna"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile fino al 31 gennaio?",a:["Il camoscio alpino","La gallinella d'acqua","La pernice rossa"],c:1},
+  {d:"Quale delle seguenti specie non è cacciabile?",a:["Il verdone","Il tordo bottaccio","La canapiglia"],c:0},
+  {d:"Quale delle seguenti specie non è cacciabile da appostamento?",a:["Il beccaccino","L'allodola","L'alzavola"],c:0},
+  {d:"Quale delle seguenti specie è cacciabile nel numero massimo di 10 capi al giorno per cacciatore?",a:["Il germano reale","La beccaccia","Il tordo sassello"],c:0},
+  {d:"Quale delle seguenti specie è cacciabile?",a:["Il cervo","Lo stambecco","Il lupo"],c:0},
+  {d:"Si può cacciare il lucherino?",a:["Mai","Dalla terza domenica di settembre al 31 dicembre","Dalla terza domenica di settembre al 31 gennaio"],c:0},
+  {d:"Quale delle seguenti specie non è particolarmente protetta?",a:["Il fringuello","L'aquila reale","Il picchio verde"],c:0},
+  {d:"Quali di questi mammiferi si può abbattere?",a:["Il camoscio appenninico","Il camoscio alpino","L'orso bruno"],c:1},
+  {d:"Si può abbattere la femmina del gallo forcello?",a:["Mai","Sì, ma solo in novembre","Sì, ma solo se non accompagnata dai pulcini"],c:0},
+  {d:"Quale delle seguenti specie non è cacciabile?",a:["La gallinella d'acqua","La peppola","Il moriglione"],c:1},
+  {d:"Quale delle seguenti specie è cacciabile?",a:["La pernice bianca","La pittima minore","Lo svasso maggiore"],c:0},
+  {d:"Quale delle seguenti specie è cacciabile?",a:["La folaga","La strolaga mezzana","Il piviere dorato"],c:0},
+  {d:"Col terreno coperto di neve si può cacciare il camoscio in zona Alpi?",a:["Sì, nel periodo consentito","No","Sì, ma solo se il terreno è parzialmente coperto di neve"],c:0},
+  {d:"Si può cacciare su terreni allagati da piene di fiume?",a:["No","Sì","Solo da appostamento"],c:0},
+  {d:"In quale di queste zone si può esercitare la caccia?",a:["In un fondo chiuso di proprietà","Nell'ATC prescelto","In oasi di protezione"],c:1},
+  {d:"Nelle zone militari delimitate da tabelle si può cacciare?",a:["Sì, ma solo i militari","No","Sì, ma solo da appostamento fisso"],c:1},
+  {d:"In quale intervallo percentuale il territorio agro-silvo-pastorale regionale in zona Alpi è destinato a protezione della fauna selvatica?",a:["Dal 10 al 20%","Dal 20 al 30%","Dal 30 al 40%"],c:0},
+  {d:"In quale intervallo percentuale il territorio agro-silvo-pastorale regionale fuori zona Alpi è destinato a protezione della fauna selvatica?",a:["Dal 10 al 20%","Dal 30 al 50%","Dal 20 al 30%"],c:2},
+  {d:"A quale distanza minima occorre stare per poter sparare in direzione di una strada provinciale?",a:["100 metri","150 metri","300 metri"],c:1},
+  {d:"È consentito cacciare il beccaccino da appostamento?",a:["No","Sì, sempre","Sì, ma solo se temporaneo"],c:0},
+  {d:"È consentito cacciare all'aspetto la beccaccia?",a:["Mai","Sì","Solo al limite del bosco"],c:0},
+  {d:"È consentita la caccia su terreno totalmente coperto da neve?",a:["No, mai","Sì, sempre","No, salvo che in zona Alpi"],c:2},
+  {d:"Su uno specchio d'acqua gelato quando si può cacciare?",a:["Sempre","Solo se non è in tutto o nella maggior parte coperto da ghiaccio","Mai"],c:1},
+  {d:"Quando si può cacciare la lepre comune in un vivaio?",a:["Solo a scopo di addestramento del cane","In nessun caso","Quando si ha il consenso del proprietario"],c:1},
+  {d:"A quale distanza minima da una superstrada si può sparare in direzione opposta a essa?",a:["50 metri","100 metri","150 metri"],c:0},
+  {d:"Quando si può esercitare la caccia a bordo di autoveicoli?",a:["Solo quando sono fermi","Mai","Solo sulle strade poderali e interpoderali"],c:1},
+  {d:"È consentito esercitare la caccia a 80 metri da una casa?",a:["No, la distanza minima consentita è 100 metri","No, la distanza minima consentita è 150 metri","Sì, purché si spari in direzione opposta"],c:0},
+  {d:"È consentito sparare a bordo di un trattore?",a:["Sì","Mai","Sì, purché non sia in movimento"],c:1},
+  {d:"A quale distanza minima è consentito sparare in direzione di case, strade, posti di lavoro?",a:["100 metri","150 metri","300 metri"],c:1},
+  {d:"A quale distanza minima si può sparare avendo alle spalle una strada comunale?",a:["100 metri","50 metri","150 metri"],c:1},
+  {d:"A che distanza minima dai confini di una zona di ripopolamento e cattura si può cacciare in forma vagante?",a:["Non c'è distanza minima","50 metri","100 metri"],c:0},
+  {d:"A che distanza minima da una zona di ripopolamento e cattura si può impiantare un appostamento fisso?",a:["100 metri","200 metri","400 metri"],c:2},
+  {d:"È sempre vietato esercitare la caccia:",a:["Nelle zone adibite ad attività sportive","Su una strada poderale","Entro 1000 metri dalle funivie"],c:0},
+  {d:"A quale distanza minima si può sparare avendo alle spalle una linea ferroviaria?",a:["50 metri","100 metri","150 metri"],c:0},
+  {d:"È consentito esercitare la caccia nei pressi di macchine operatrici agricole in funzione?",a:["No, mai","Sì, purché a distanza minima di 100 metri","Sì, purché si spari in direzione opposta"],c:1},
+  {d:"In quale giorno della settimana oltre al venerdì l'esercizio venatorio è sempre vietato?",a:["Il martedì","Il mercoledì","Il giovedì"],c:0},
+  {d:"Per quanti giorni settimanali la legge regionale consente la caccia vagante alla fauna stanziale negli ambiti territoriali di caccia?",a:["Tre giorni a scelta esclusi i giorni di silenzio venatorio","Due giorni fissi esclusi i giorni di silenzio venatorio","Tre giorni fissi esclusi i giorni di silenzio venatorio"],c:0},
+  {d:"È consentita la caccia alla lepre comune un'ora dopo il tramonto?",a:["Sì","No","Solo se autorizzati dalla Polizia provinciale"],c:1},
+  {d:"È consentita la caccia da appostamento fisso agli acquatici da due ore prima del sorgere del sole?",a:["No","Sì","Solo dalla terza domenica di settembre al 1° ottobre"],c:0},
+  {d:"Di quante giornate di caccia per la legge lombarda si può usufruire al massimo durante la stagione venatoria?",a:["75","45","55"],c:2},
+  {d:"Quando una festività cade di martedì, l'esercizio venatorio è consentito?",a:["Sì","Dipende da regione a regione","No"],c:2},
+  {d:"Possono le Regioni consentire la caccia da appostamento all'avifauna migratoria per più di tre giorni settimanali?",a:["No, mai","Sì, sempre","Sì, ma solo nel periodo compreso tra 1 ottobre e 30 novembre"],c:2},
+  {d:"La caccia è consentita sino a che ora?",a:["Sino al tramonto, fatta eccezione per la caccia di selezione agli ungulati","Sino a un'ora dopo il tramonto","Sino al tramonto per tutte le forme di caccia"],c:0},
+  {d:"Qual è l'orario giornaliero in cui è consentita la caccia?",a:["Dall'alba al tramonto","Da un'ora prima del sorgere del sole al tramonto","Da un'ora prima dell'alba a un'ora dopo il tramonto"],c:1},
+  {d:"Quando si può esercitare la caccia nelle giornate di martedì e venerdì?",a:["Quando coincidono con giorni festivi","Mai","Dipende dal calendario venatorio regionale"],c:1},
+  {d:"Nel parco di una villa si può cacciare?",a:["Quando il parco è cintato e chi caccia ha il consenso del proprietario","Sempre, indipendentemente da ogni autorizzazione","Mai"],c:2},
+  {d:"Si può cacciare sparando da un natante in movimento?",a:["Solo se a motore","No","Solo se a remi"],c:1},
+  {d:"Nelle foreste demaniali l'esercizio venatorio:",a:["È sempre vietato","È vietato durante le operazioni di rimboschimento","È vietato, salvo in quelle che non presentino condizioni favorevoli a riproduzione e sosta della fauna"],c:2},
+  {d:"Le trappole per la cattura di fauna selvatica:",a:["Si possono solo detenere","Non si possono né vendere né detenere","Si possono solo vendere"],c:1},
+  {d:"Le reti per uccellagione:",a:["Si possono usare","Si possono solo detenere","Non si possono né vendere né detenere"],c:2},
+  {d:"Si può cacciare con un fucile semiautomatico cal. 12 a cinque colpi munito di riduttore fisso che ne limita l'uso a tre?",a:["Sì, ma solo al di fuori della zona Alpi","No","Solo se autorizzati dalle competenti autorità"],c:0},
+  {d:"È consentito l'uso del calibro 10?",a:["No","Sì","Solo se si è appositamente autorizzati"],c:0},
+  {d:"E' permesso utilizzare a caccia una carabina ad aria compressa?",a:["Sì","No","Solo da appostamento"],c:1},
+  {d:"Chi può esercitare la caccia con la pistola?",a:["Solo gli agenti venatori volontari","Nessuno","Solo la Polizia provinciale"],c:1},
+  {d:"La caccia, oltre che col fucile, è consentita anche:",a:["Col falco","Con la balestra","Con trappole a scatto"],c:0},
+  {d:"È consentito usare bocconi avvelenati?",a:["No","Sì","Solo agli agenti di vigilanza provinciali"],c:0},
+  {d:"Quanti sono i colpi consentiti per un'arma da caccia a canna liscia da usare in zona Alpi?",a:["Due","Cinque","Tre"],c:0},
+  {d:"Si può cacciare con l'arco?",a:["Sì","No","Solo se appositamente autorizzati dalla Regione"],c:0},
+  {d:"Che cosa prevede la legge per l'uso a caccia di armi ad aria compressa?",a:["Le vieta, salvo quelle a canna rigata","Le consente","Le vieta"],c:2},
+  {d:"Si può cacciare col vischio?",a:["Mai","Sì","Solo in pochi casi fissati dalla legge"],c:0},
+  {d:"A quanti colpi deve essere limitato il fucile a ripetizione semiautomatica fuori della zona Alpi?",a:["A non più di quattro colpi","A non più di tre colpi","A non più di due colpi"],c:1},
+  {d:"Si può cacciare con la balestra?",a:["Sì","No","Solo se appositamente autorizzati dalla Regione"],c:1},
+  {d:"È consentito a scopo venatorio l'uso di un'arma munita di silenziatore?",a:["Sì, sempre","Solo alla Polizia provinciale","No, è sempre vietato"],c:2},
+  {d:"Per esercitare la caccia con l'arco occorre:",a:["La licenza di caccia","Una speciale autorizzazione","Il solo tesserino venatorio"],c:0},
+  {d:"Dove è sempre vietato portare armi da fuoco cariche?",a:["Nella zona Alpi quando il terreno è coperto di neve","Sulle strade poderali e interpoderali","A bordo di qualunque veicolo"],c:2},
+  {d:"Per esercitare la caccia col falco occorre:",a:["La licenza di caccia","Una speciale autorizzazione","Il solo tesserino venatorio"],c:0},
+  {d:"Chi ha scelto come forma di caccia in via esclusiva quella da appostamento fisso può cacciare:",a:["Solo nel proprio appostamento","In qualsiasi appostamento fisso col consenso del titolare purché socio di almeno un ATC o CAC in regione","Solo negli appostamenti rientranti nell'ATC o CAC di appartenenza"],c:1},
+  {d:"È consentita la caccia a rastrello?",a:["Sì, sempre","Sì, massimo in tre persone","No, mai"],c:1},
+  {d:"Quando si possono prendere volatili dal nido?",a:["Per allevarli come richiami vivi","Solo quando sono idonei al volo","Solo alle condizioni previste dalla legge"],c:2},
+  {d:"Per allevare lepri, occorre l'autorizzazione di chi?",a:["Di nessuno","Dell'ATC competente","Della Regione"],c:2},
+  {d:"Da quando è consentito l'allenamento e addestramento dei cani sul territorio a caccia programmata?",a:["Nei trenta giorni antecedenti l'apertura della caccia","Dalla terza domenica di settembre","Dall'1 ottobre"],c:0},
+  {d:"È sempre consentito l'addestramento dei cani da caccia?",a:["Sì, ma solo negli ATC","No, solo in alcune zone e/o periodi","Sì, ma solo nei quagliodromi"],c:1},
+  {d:"Quale dei seguenti carnieri è consentito in una giornata di caccia alla migratoria?",a:["17 tordi bottacci, 10 merli e 3 beccacce","12 germani, 10 colombacci e 7 tordi sasselli","9 germani e 1 alzavola"],c:2},
+  {d:"Da chi è rilasciata l'autorizzazione per la caccia da appostamento fisso?",a:["Dal Comune competente per territorio","Dall'ATC di appartenenza","Dalla Regione"],c:2},
+  {d:"Per poter impiantare un appostamento fisso occorre il consenso di chi?",a:["Del proprietario del fondo","Del conduttore del fondo","Del proprietario o del conduttore del fondo"],c:2},
+  {d:"In un appostamento fisso, quante persone possono essere presenti al massimo per cacciare contemporaneamente?",a:["Il titolare e altre cinque","Non più di quattro","Non c'è limite"],c:2},
+  {d:"A quale distanza minima da un appostamento fisso in funzione, si può esercitare la caccia vagante?",a:["100 metri","200 metri","400 metri"],c:0},
+  {d:"A quale distanza minima da un appostamento fisso, può essere collocato un appostamento temporaneo?",a:["200 metri","100 metri","400 metri"],c:0},
+  {d:"A quale distanza minima da un fondo chiuso può essere impiantato un appostamento fisso?",a:["Non c'è distanza minima","100 metri","400 metri"],c:0},
+  {d:"È obbligatorio segnalare la cattura di uccelli inanellati?",a:["No, è facoltativo","È obbligatorio","È obbligatorio ma solo per quelli inanellati all'estero"],c:1},
+  {d:"Ai richiami vivi di cattura consentiti, appartiene:",a:["La tortora","Il tordo sassello","La folaga"],c:1},
+  {d:"Tra i richiami vivi vietati, figura:",a:["Il beccaccino","La pavoncella","Il tordo bottaccio"],c:0},
+  {d:"Può un agricoltore recintare il proprio fondo?",a:["No, mai","Sì, ai sensi di legge","Solo durante la stagione venatoria"],c:1},
+  {d:"Durante la caccia da appostamento fisso è consentito l'uso:",a:["Di stampi in plastica riproducenti specie cacciabili e non cacciabili","Della civetta viva","Di uccelli imbalsamati di specie cacciabili e non cacciabili"],c:0},
+  {d:"Chiunque può esercitare la tassidermia?",a:["Sì, purché tecnicamente preparato","Nessuno, è un'attività vietata","No, solo chi appositamente autorizzato"],c:2},
+  {d:"Ogni cacciatore che eserciti la caccia da appostamento fisso può utilizzare:",a:["Un numero massimo di richiami vivi di cattura illimitato, di cui non più di 8 per specie consentita","Un numero massimo di richiami vivi di allevamento non superiore a 30","Un numero massimo di richiami vivi di cattura non superiore a 40, di cui non più di 10 per specie consentita"],c:2},
+  {d:"È vietato l'uso di richiami vivi che non siano identificabili:",a:["Mediante anellino inamovibile","Mediante collarino","Mediante un contrassegno applicato sulla gabbietta"],c:0},
+  {d:"Chi istituisce le oasi di protezione e le zone di ripopolamento e cattura?",a:["Il Comune competente per territorio","La Regione","L'ATC"],c:1},
+  {d:"In una zona di ripopolamento e cattura, chi può catturare la fauna stanziale?",a:["I proprietari dei terreni","Nessuno","La Regione tramite il personale preposto"],c:2},
+  {d:"Nelle zone di ripopolamento e cattura a chi è permessa la caccia?",a:["Ai residenti nei comuni inclusi nella zona","Agli agenti della Polizia provinciale","A nessuno"],c:2},
+  {d:"Nelle oasi di protezione si possono cacciare:",a:["I Corvidi","Il cinghiale e la volpe","La caccia è sempre vietata a chiunque"],c:2},
+  {d:"Che cosa sono le riserve naturali?",a:["Aree naturali protette dove la caccia è sempre vietata","Aree a caccia riservata","Aree destinate alla tutela dell'agricoltura"],c:0},
+  {d:"È consentito esercitare la caccia nei centri privati di riproduzione della fauna selvatica?",a:["Solo a chi ha il permesso del proprietario","Sì","No, a nessuno"],c:2},
+  {d:"Cosa sono gli osservatori ornitologici?",a:["Stazioni per lo studio delle migrazioni degli uccelli","Particolari appostamenti fissi di caccia","Luoghi di sosta idonei per gli uccelli migratori"],c:0},
+  {d:"Per aziende agri-turistico venatorie si intende:",a:["Zone di turismo agricolo e forestale","Zone destinate all'allevamento di fauna selvatica da immettere sui fondi agricoli","Zone di caccia private istituite per l'integrazione del reddito agricolo"],c:2},
+  {d:"Che cos'è l'ISPRA?",a:["È l'organo tecnico nazionale istituito fra le associazioni venatorie","È l'organo nazionale di consulenza tecnico-scientifico in materia di gestione faunistico-venatoria","È l'istituto nazionale per la gestione delle aree naturali protette"],c:1},
+  {d:"Quale dei seguenti istituti ha competenze in materia di caccia?",a:["L'Istituto territoriale per la fauna selvatica","L'Ente regionale per i servizi all'agricoltura e alle foreste","L'ISPRA"],c:2},
+  {d:"Che cosa fa il Consiglio regionale in materia venatoria?",a:["Autorizza la caccia nei fondi chiusi","Approva le disposizioni integrative al calendario venatorio","Emana leggi"],c:2},
+  {d:"Che cosa è la licenza di caccia?",a:["È il documento sul quale vanno annotati le giornate di caccia e i capi abbattuti","È la polizza assicurativa","È il documento che autorizza il porto di fucile a uso caccia"],c:2},
+  {d:"Cosa si intende per tesserino venatorio regionale?",a:["Il documento sul quale il cacciatore deve segnare ogni giornata di caccia e i relativi capi abbattuti","Il regolamento annuale per la gestione del prelievo venatorio","Il documento sul quale il cacciatore deve segnare la regione dove si trova a caccia"],c:0},
+  {d:"Per esercitare la caccia è obbligatorio essere assicurati per responsabilità civile verso terzi?",a:["No, è facoltativo","Sì ma solo finché si è inesperti nel maneggio delle armi","Sì, è obbligatorio"],c:2},
+  {d:"L'art. 842 del codice civile consente:",a:["L'accesso di tutti i cittadini ai fondi altrui","L'accesso ai fondi altrui solo dei cacciatori che non utilizzino cani","L'accesso dei cacciatori ai fondi altrui purché non si provochino danni alle colture"],c:2},
+  {d:"In quale di questi casi, se recidivi, vi è anche l'esclusione definitiva della licenza di caccia?",a:["Caccia di martedì e di venerdì","Abbattimento e cattura di fauna selvatica in modo diverso da quello consentito","Esercizio della caccia in periodo di divieto generale"],c:2},
+  {d:"In quale di questi casi è previsto l'arresto o l'ammenda?",a:["Caccia sparando da una barca in movimento","Trasporto di armi da caccia scariche in centri abitati","Caccia alla posta alla beccaccia"],c:0},
+  {d:"In quale di questi casi si applica l'arresto e l'ammenda?",a:["Caccia in zona di ripopolamento e cattura","Trasporto di armi scariche non in custodia su autoveicoli","Commercio di allodole quando ne è consentita la caccia"],c:0},
+  {d:"Che cosa comporta l'abbattimento di un cigno reale?",a:["L'arresto o un'ammenda e la sospensione della licenza","Una sanzione amministrativa","La revoca della licenza"],c:0},
+  {d:"Che cosa comporta l'abbattimento di uno stambecco?",a:["L'esclusione definitiva della licenza di caccia","L'arresto e l'ammenda","Nessuna conseguenza in quanto specie cacciabile"],c:1},
+  {d:"Che cosa comporta l'abbattimento di una cicogna?",a:["L'esclusione definitiva della licenza","Una sanzione amministrativa","L'arresto o l'ammenda e la sospensione della licenza"],c:2},
+  {d:"Che cosa comporta l'abbattimento di un gallo forcello al di fuori della zona faunistica delle Alpi?",a:["La sospensione della licenza","Una sanzione amministrativa","La revoca della licenza"],c:1},
+  {d:"Che cosa comporta l'abbattimento di un gallo cedrone al di fuori della zona faunistica delle Alpi?",a:["Un'ammenda e la sospensione della licenza in recidiva","Una sanzione amministrativa","La revoca della licenza"],c:0},
+  {d:"Che cosa comporta cacciare in un'azienda faunistico-venatoria senza permesso?",a:["La sospensione della licenza","Una sanzione amministrativa e la sospensione della licenza in recidiva","La revoca della licenza"],c:1},
+  {d:"Che cosa comporta cacciare in un'azienda agri-turistico venatoria senza permesso?",a:["La sospensione della licenza","Una sanzione amministrativa","La revoca della licenza"],c:1},
+  {d:"Che cosa comporta, fatte salve le eccezioni di legge, cacciare in un ATC senza essere iscritti?",a:["La sospensione della licenza","Una sanzione amministrativa e la sospensione della licenza in recidiva","La revoca della licenza"],c:1},
+  {d:"Che cosa comporta l'abbattimento di un cinghiale di età inferiore a 1 anno?",a:["Nessuna sanzione","La revoca della licenza","Una sanzione amministrativa"],c:0},
+  {d:"Che sanzione è prevista per chi non effettua sul tesserino venatorio le prescritte annotazioni?",a:["Una sanzione amministrativa","La revoca della licenza","La sospensione della licenza"],c:0},
+  {d:"Che sanzione è prevista per chi, non recidivo, caccia specie non consentite?",a:["Un'ammenda","La revoca della licenza","La sospensione della licenza"],c:0},
+  {d:"Che sanzione è prevista per chi abbatte fauna selvatica cacciabile oltre il numero consentito?",a:["Una sanzione amministrativa","La revoca della licenza","La sospensione della licenza"],c:0},
+  {d:"Che cosa comporta l'abbattimento di un airone bianco maggiore?",a:["Una sanzione amministrativa","Un'ammenda e la sospensione della licenza in recidiva","La sospensione della licenza"],c:1},
+  {d:"In quale di questi casi la licenza è revocata?",a:["Per aver abbattuto un chiurlo maggiore","Per aver dimenticato di portare la licenza con sé","Per aver esercitato l'uccellagione"],c:2},
+  {d:"Quale sanzione è prevista per chi porta o trasporta fucili non in custodia quando la caccia non è consentita?",a:["Una sanzione amministrativa","La revoca della licenza","La sospensione della licenza per dieci anni"],c:0},
+  {d:"Chi caccia in un'oasi di protezione è soggetto a quale sanzione?",a:["A un'ammenda","All'arresto","All'arresto e al pagamento di un'ammenda"],c:2},
+  {d:"Quale sanzione comporta l'abbattimento di una pispola?",a:["Nessuna","Una sanzione penale","Una sanzione amministrativa"],c:1},
+  {d:"In quale di questi casi, se recidivi, vi è la revoca della licenza?",a:["Caccia in una riserva naturale","Caccia agli ungulati con terreno coperto di neve","Trasporto d'armi quando la caccia non è consentita"],c:0},
+  {d:"In quale di questi casi vi è la revoca della licenza?",a:["Esercizio dell'uccellagione","Superamento del limite giornaliero di fauna stanziale","Caccia senza accompagnatore"],c:0},
+  {d:"In quale di questi casi, se recidivi, vi è la revoca della licenza?",a:["Caccia in giardini pubblici","Caccia a rastrello in più di tre persone","Caccia da appostamento alla beccaccia"],c:0},
+  {d:"In quale dei seguenti casi vi è anche la sospensione della licenza?",a:["Caccia senza versamento delle tasse","Caccia da natante","Superamento del limite giornaliero di capi consentito"],c:1},
+  {d:"In quale dei seguenti casi, in recidiva, vi è la revoca della licenza?",a:["Caccia in zona di ripopolamento e cattura","Abbattimento fauna stanziale da appostamento fisso","Superamento delle giornate settimanali di caccia consentite"],c:0},
+  {d:"In quale dei seguenti casi, se recidivi, vi è l'esclusione definitiva della licenza?",a:["Caccia in periodo di divieto generale","Caccia senza assicurazione","Caccia a meno di cinquanta metri da una ferrovia"],c:0},
+  {d:"In quale dei seguenti casi, se recidivi, vi è la revoca della licenza?",a:["Trasporto di armi su autovettura di armi scariche ma non in custodia","Caccia senza versamento della tassa regionale","Caccia in una riserva naturale regionale"],c:2},
+  {d:"In quale dei seguenti casi, se recidivi, vi è l'esclusione definitiva della licenza?",a:["Caccia allo stambecco","Commercio di uccelli morti quali i tordi","Allevamento di lepri senza autorizzazione"],c:0},
+  {d:"Che cosa comporta l'abbattimento di un airone guardabuoi?",a:["Un'ammenda e la sospensione della licenza in recidiva","Una sanzione amministrativa","La revoca della licenza"],c:0},
+  {d:"Quale sanzione è prevista per chi caccia con armi ad aria compressa?",a:["Un'ammenda","La revoca della licenza","Una sanzione amministrativa"],c:0},
+  {d:"Quale sanzione è prevista per chi caccia con l'uso di un registratore come richiamo acustico?",a:["Un'ammenda e la confisca del registratore","Una sanzione amministrativa","La revoca, in recidiva, della licenza"],c:0},
+  {d:"In quale di questi casi, se recidivi, vi è l'esclusione definitiva della licenza?",a:["Caccia agli acquatici nel mese di marzo","Caccia da appostamento al beccaccino","Caccia da veicoli"],c:0},
+  {d:"In quale di questi casi, se recidivi, vi è la revoca e il divieto di rilascio per dieci anni della licenza?",a:["Caccia su terreno coperto di neve","Caccia da natante in movimento","Caccia in valli da pesca regolarmente tabellate"],c:1},
+  {d:"In quale di questi casi vi è anche l'arresto?",a:["Caccia nelle riserve naturali","Caccia senza assicurazione","Introduzione illegale di fauna selvatica dall'estero"],c:0},
+  {d:"In quale di questi casi è previsto l'arresto e l'ammenda?",a:["Caccia in giardini urbani","Caccia a meno di cento metri da una casa","Rimozione di legittime tabelle di divieto"],c:0},
+  {d:"In quale di questi casi è previsto l'arresto o l'ammenda?",a:["Caccia in orari non consentiti","Caccia da appostamento fisso senza autorizzazione","Caccia da veicoli"],c:2},
+  {d:"In quale di questi casi può scattare anche l'arresto?",a:["Caccia al fagiano nel mese di maggio","Caccia a rastrello in più di tre persone","Appostamento fisso abusivo"],c:0},
+  {d:"Che cosa comporta l'introduzione illegale di fauna selvatica dall'estero?",a:["Una sanzione amministrativa","La revoca della licenza","La sospensione della licenza"],c:0},
+  {d:"Il coordinamento delle guardie venatorie volontarie spetta:",a:["Alla Prefettura","Al corpo di Polizia provinciale","All'Arma dei carabinieri"],c:1},
+  {d:"Chi rilascia il decreto di guardia venatoria volontaria?",a:["La Regione","La Provincia","Il Prefetto"],c:1},
+  {d:"Che qualifica hanno gli agenti di vigilanza ittico-venatoria dipendenti dalle Province?",a:["Sono agenti volontari","Sono pubblici ufficiali","Sono agenti di polizia giudiziaria e di pubblica sicurezza"],c:2},
+  {d:"Dove possono esercitare la caccia gli agenti della Polizia provinciale?",a:["Nel territorio della propria provincia","Nel territorio del comune di residenza","Nel territorio di un'altra provincia"],c:2},
+  {d:"È sequestrabile il cane?",a:["Sì, se produce effettivi danni alla fauna","Sì, se danneggia i terreni coltivati","No, mai"],c:2},
+  {d:"Gli agenti della Polizia provinciale devono sequestrare l'arma quando il cacciatore:",a:["Ha abbattuto un capriolo","Ha abbattuto un camoscio","Ha abbattuto uno stambecco"],c:2},
+  {d:"Quando gli agenti della Polizia provinciale procedono al sequestro della fauna selvatica morta?",a:["Non possono mai procedere a tale sequestro","Procedono sempre","Quando la stessa costituisce il prodotto della violazione o il corpo di reato"],c:2},
+  {d:"La qualifica di guardia venatoria volontaria può essere concessa:",a:["A tutti coloro che ne facciano richiesta","Solo a chi abbia superato apposito esame di idoneità","Solo a chi si dichiara disponibile a collaborare con la Polizia provinciale"],c:1},
+  {d:"Le infrazioni possono essere sanate in via amministrativa pagando una somma pari a:",a:["Doppio del minimo o terzo del massimo","Triplo del minimo","Metà del massimo"],c:0},
+  {d:"Nei siti di Natura 2000 si può esercitare la caccia?",a:["Sì, solo sulla base del calendario venatorio regionale","No","Sì, sulla base di limitazioni aggiuntive specifiche"],c:2},
+  {d:"Nelle ZPS quale delle seguenti specie selvatiche non può mai essere cacciata?",a:["La pernice rossa","La pernice bianca","La coturnice delle Alpi"],c:1},
+  {d:"Cosa significa l'acronimo 'ZPS'?",a:["Zona di Passaggio Speciale","Zona di Protezione Speciale","Zona di Protezione della Selvaggina"],c:1},
+  {d:"Nelle ZPS quale delle seguenti specie selvatiche non può mai essere cacciata?",a:["Il moriglione","Il codone","La moretta"],c:2},
+  {d:"Per quante giornate settimanali si può cacciare nelle ZPS nel mese di gennaio?",a:["Tre","Due","Una"],c:1},
+  {d:"Nelle ZPS è consentito cacciare gli ungulati in selezione?",a:["Sì","No","Solo il cinghiale"],c:0},
+  {d:"Il regime di protezione della fauna selvatica è più rigido in una ZPS o in una riserva naturale?",a:["In una ZPS","È lo stesso","In una riserva naturale"],c:2},
+  {d:"In Lombardia sono state istituite ZPS?",a:["Sì, solo in montagna","Sì, ovunque vi siano ambienti ritenuti meritevoli di tale livello di tutela","Sì, solo lungo i fiumi"],c:1},
+  {d:"Nelle ZPS quale delle seguenti specie selvatiche non può mai essere cacciata?",a:["Il beccaccino","Il combattente","Il frullino"],c:1},
+  {d:"Nelle ZPS le giornate settimanali di caccia in gennaio sono fisse?",a:["No","Sì e vengono fissate dalla Regione","Sì e vengono fissate dal Ministero dell'Ambiente"],c:1},
+  {d:"Nelle ZPS caratterizzate da zone umide, qual è l'unica specie di anatide che può essere cacciata in data antecedente al 1° ottobre?",a:["L'alzavola","La marzaiola","Il germano reale"],c:2}
+];
+
+// ── SEZIONE 5: TUTELA DELLA NATURA (163 domande) ──
+SECTIONS[4].q = [
+  {d:"Perché alcune specie di fauna selvatica si dicono insettivore?",a:["Perché si cibano anche di insetti","Perché si cibano prevalentemente di insetti","Perché hanno le ali come gli insetti"],c:1},
+  {d:"Perché nella zona delle Alpi i periodi di caccia sono più limitati?",a:["Perché nevica molto","Perché la tipica avifauna alpina cova in anticipo","Perché la fauna stanziale alpina va maggiormente tutelata"],c:2},
+  {d:"Che cos'è l'ecologia?",a:["La scienza che tratta il comportamento degli animali","La scienza che studia le relazioni tra gli esseri viventi e l'ambiente in cui vivono","La scienza che studia il fenomeno delle migrazioni"],c:1},
+  {d:"La meccanizzazione agricola giova o nuoce alla fauna selvatica?",a:["Giova","Nuoce","È indifferente"],c:1},
+  {d:"Che cos'è l'etologia?",a:["La scienza che studia il comportamento degli animali","La scienza che studia l'etica in relazione agli animali","La scienza che studia il fenomeno delle migrazioni"],c:0},
+  {d:"La fauna selvatica può vivere indifferentemente in qualsiasi ambiente?",a:["Sì","No, ciascuna specie o gruppo di specie necessita di un suo ambiente particolare","Non ha alcuna importanza perché si adatta ovunque"],c:1},
+  {d:"Quali siepi sono più utili all'avifauna selvatica?",a:["Quelle rade e ben potate","Quelle non potate e ricche di bacche","Quelle fitte e impenetrabili"],c:1},
+  {d:"Se stai fumando in auto cosa ne fai del mozzicone accesso?",a:["Lo getti dal finestrino","Lo spegni nel posacenere","Lo spegni nel posacenere e lo getti dal finestrino"],c:1},
+  {d:"La risaia è una coltivazione in atto?",a:["Sì, dalla semina al raccolto","Mai","Solo poco prima del raccolto"],c:0},
+  {d:"La marcita è una coltivazione in atto?",a:["Sempre","Mai","Solo in parte"],c:0},
+  {d:"Il vivaio è una coltivazione in atto?",a:["Sempre","No, mai","Solo fino a un anno dall'impianto"],c:0},
+  {d:"Quando il vigneto è in attualità di coltivazione?",a:["Durante la potatura","Durante l'aratura","Fino a maturazione e raccolta dell'uva"],c:2},
+  {d:"Cos'è un vivaio?",a:["Una coltura specializzata","Un bosco artificiale","Una coltura annuale"],c:0},
+  {d:"Che cosa è una palude?",a:["Una coltura biennale","Un prato allagato artificialmente","Una zona umida"],c:2},
+  {d:"Cosa produce la marcita?",a:["Erba","Frumento","Avena"],c:0},
+  {d:"È auspicabile un rapporto di collaborazione tra caccia e agricoltura?",a:["No","Sì","Ha poca importanza"],c:1},
+  {d:"In quale periodo si raccoglie normalmente il riso?",a:["Luglio/agosto","Settembre/ottobre","Novembre/dicembre"],c:1},
+  {d:"In che periodo normalmente si raccolgono le uve nere?",a:["Luglio/agosto","Settembre/ottobre","Novembre/dicembre"],c:1},
+  {d:"In quale mese si inizia normalmente la raccolta delle olive?",a:["Settembre","Novembre","Marzo"],c:1},
+  {d:"Quale delle seguenti pratiche agronomiche può essere utile per la fauna selvatica?",a:["Il mantenimento in campo delle stoppie di cereali","Il diserbo meccanico","La potatura delle siepi"],c:0},
+  {d:"Quale dei seguenti sistemi può essere adottato per limitare i danni causati dalle macchine agricole alla fauna selvatica?",a:["Usare macchine di grandi dimensioni","Montare sulla macchina sistemi di allontanamento della fauna","Iniziare i lavori dai bordi dei campi"],c:1},
+  {d:"Quando è possibile cacciare in un vivaio?",a:["Con il consenso del proprietario","Solo per addestrare il cane","Mai"],c:2},
+  {d:"Se si trova un nido, cosa è corretto fare?",a:["Allontanarsi per non disturbare","Raccoglierlo per esaminarlo","Raccoglierlo per nasconderlo altrove"],c:0},
+  {d:"Se nei mesi estivi si trova un cucciolo di capriolo, cosa è corretto fare?",a:["Non toccarlo e allontanarsi subito","Esaminarlo per verificare che stia bene","Raccoglierlo per portarlo in un luogo nascosto"],c:0},
+  {d:"Se un fagiano alzato dal cane si posa in un prato dove l'agricoltore sta tagliando l'erba, come ci si comporta?",a:["Si richiama il cane andando oltre","Si incita il cane a cercare il fagiano","Si entra nel prato insieme al cane"],c:0},
+  {d:"Chi indennizza i danni che il cacciatore può arrecare all'agricoltura?",a:["La Provincia","La Regione","Il cacciatore stesso"],c:2},
+  {d:"Chi indennizza agli agricoltori i danni arrecati dalla fauna selvatica nei territori a caccia programmata?",a:["La Regione e in parte i comitati di gestione di ATC e CAC","Il Comune","I comitati di gestione di ATC e CAC"],c:0},
+  {d:"Chi indennizza agli agricoltori i danni arrecati dalla fauna selvatica nelle oasi di protezione e nelle zone di ripopolamento e cattura?",a:["I comitati di gestione di ATC e CAC","La Regione","Il Comune"],c:1},
+  {d:"Come si chiama l'effetto provocato nei corsi e specchi d'acqua dai fertilizzanti provenienti da agricoltura e scarichi domestici?",a:["Fermentazione","Eutrofizzazione","Sedimentazione"],c:1},
+  {d:"Cosa s'intende per frutti pendenti?",a:["I frutti pressoché maturi","I frutti caduti dagli alberi","Piante da frutto sovraccariche"],c:0},
+  {d:"Una foresta di abete bianco e abete rosso è detta:",a:["Foresta di aghifoglie","Foresta di latifoglie","Macchia mediterranea"],c:0},
+  {d:"La realizzazione di una pista da sci in montagna cosa comporta per la tipica fauna alpina?",a:["Facilita lo spostamento tra i boschi","Introduce nuove fonti di disturbo","Nessuna conseguenza"],c:1},
+  {d:"Qual è il maggiore impatto della rete viaria sulla fauna selvatica?",a:["Frammenta il territorio e introduce barriere fisiche ai suoi spostamenti","La fa allontanare per l'inquinamento acustico","La fa allontanare per l'inquinamento luminoso nelle ore notturne"],c:0},
+  {d:"Che cosa riguarda l'inquinamento idrico?",a:["L'acqua","L'aria","L'acqua e l'aria"],c:0},
+  {d:"L'inquinamento atmosferico è più avvertito:",a:["Quando spirano forti venti da nord","Quando ci sono nebbia e calma di vento","Quando piove in maniera moderata o forte"],c:1},
+  {d:"Gli alberi morti e secchi sono utili o inutili nel bosco?",a:["Sono inutili perché non producono più ossigeno","Sono inutili e pericolosi in quanto esca per incendi","Possono essere utili per l'alimentazione di certe specie di uccelli come i picchi"],c:2},
+  {d:"Dopo quanti anni dall'impianto di solito si tagliano i pioppeti?",a:["4 anni","6 anni","10 anni"],c:2},
+  {d:"Quale delle seguenti specie di avifauna fa più danni ai frutteti?",a:["Lo storno","Il picchio verde","Il pettirosso"],c:0},
+  {d:"Quali sostanze di sintesi si usano per eliminare le erbe infestanti?",a:["Diserbanti","Anticrittogamici","Insetticidi"],c:0},
+  {d:"Che cos'è lo smog?",a:["È una sostanza di laboratorio","È una fitta nebbia naturale","È una conseguenza dell'inquinamento atmosferico"],c:2},
+  {d:"Quale delle seguenti essenze arboree non è originaria del nostro paese?",a:["Olmo","Acero campestre","Robinia"],c:2},
+  {d:"Che cosa si intende per marcita?",a:["Un prato naturale","Un medicaio","Un prato irrigato artificialmente"],c:2},
+  {d:"Che rapporto esiste fra la fauna selvatica e l'ambiente?",a:["Nessun rapporto particolare","Un rapporto casuale","Un rapporto stretto e diretto"],c:2},
+  {d:"Le piante verdi respirano?",a:["Sempre","Solo di notte","Mai"],c:1},
+  {d:"Quale delle seguenti specie di uccelli è più dannosa per le colture cerealicole?",a:["La cesena","Il codibugnolo","La cornacchia grigia"],c:2},
+  {d:"Cosa sono i cereali autunno-vernini?",a:["Cereali che vengono seminati in autunno","Cereali che vengono raccolti in autunno","Cereali che vengono raccolti in inverno"],c:0},
+  {d:"Nel caso in cui andando a caccia si avvisti un incendio boschivo, cosa occorre fare?",a:["Telefonare immediatamente al numero di emergenza dei vigili del fuoco","Cercare di spegnere le fiamme","Allontanarsi per non correre rischi inutili"],c:0},
+  {d:"Quale dei seguenti terreni può meglio ospitare il beccaccino?",a:["Stoppia di soia","Stoppia di riso","Campo arato"],c:1},
+  {d:"Quali delle seguenti colture sono più idonee alla presenza della starna?",a:["Cereali autunno-vernini","Riso","Pascoli alpini"],c:0},
+  {d:"La liquidazione dei danni arrecati alle colture agricole dalla fauna selvatica in un'oasi di protezione, da chi viene di norma effettuata?",a:["Dai comitati di gestione degli ATC","Dalla Regione","Dalle associazioni venatorie"],c:1},
+  {d:"Quali delle seguenti colture sono più idonee alla presenza della lepre comune?",a:["Erbai e medicai","Cereali autunno-vernini","Soia e mais"],c:0},
+  {d:"Quando un prato stabile viene considerato coltura in atto?",a:["Sempre","Mai","Solo all'epoca della fienagione"],c:0},
+  {d:"Qual è stata in passato la causa principale della degradazione di boschi e foreste?",a:["Il pascolo eccessivo","Il vento","Il fuoco"],c:0},
+  {d:"Quali sono gli agenti preposti alla sorveglianza del patrimonio boschivo?",a:["Le guardie zoofile","Il nucleo forestale dell'Arma dei Carabinieri","Le guardie ecologiche volontarie"],c:1},
+  {d:"Le mele in quale mese normalmente si raccolgono?",a:["Giugno","Ottobre","Dicembre"],c:1},
+  {d:"Gli incendi boschivi cosa comportano nei riguardi della fauna selvatica?",a:["Ne favoriscono l'aumento","Ne provocano la scomparsa","Non hanno alcun impatto"],c:1},
+  {d:"In un bacino idrografico una ricca vegetazione che cosa assicura?",a:["Regola l'assorbimento dell'acqua piovana","Facilita le piene di fiumi e torrenti","Causa siccità assorbendo tutta l'acqua piovana"],c:0},
+  {d:"Quale delle seguenti specie arreca sovente danno all'agricoltura?",a:["Beccaccia","Allodola","Piccione torraiolo"],c:2},
+  {d:"In quale mese di semina normalmente il frumento?",a:["Agosto","Ottobre","Dicembre"],c:1},
+  {d:"In quale tra le seguenti province è più facile trovare le ultime marcite?",a:["Como","Varese","Lodi"],c:2},
+  {d:"Quale conseguenza, tra le altre, ha comportato lo spopolamento delle montagne?",a:["L'aumento delle superfici forestali","L'incremento della coturnice","Il calo delle popolazioni di ungulati"],c:0},
+  {d:"Se cacciando si arrecano danni alle colture agricole, come occorre comportarsi?",a:["Allontanarsi prima di essere individuati","Risarcire i danni al proprietario del fondo","Rivolgersi alla propria associazione venatoria che provvederà al risarcimento"],c:1},
+  {d:"Se accade di imbattersi in un rettile, come si deve agire?",a:["Lasciarlo stare","Eliminarlo","Catturarlo vivo"],c:0},
+  {d:"Su quale delle seguenti colture può causare danni il germano reale?",a:["Il mais","La soia","Il riso"],c:2},
+  {d:"Quando un prato di erba medica si considera in attualità di coltivazione?",a:["Subito dopo lo sfalcio","Quando l'erba è alta pochi centimetri","Quando l'erba è pronta per lo sfalcio"],c:2},
+  {d:"Quale delle seguenti specie arreca sovente danno ai seminativi?",a:["Volpe","Nutria","Faina"],c:1},
+  {d:"Si può cacciare in un terreno coltivato a mais da seme?",a:["No","Sì, solo finché è verde","Sì"],c:0},
+  {d:"Chi paga i danni arrecati dalla fauna selvatica alle colture in un'oasi di protezione?",a:["La Regione","L'ATC o il CAC","Lo Stato"],c:0},
+  {d:"Chi paga i danni arrecati dalla fauna selvatica alle colture in un'area a parco naturale?",a:["L'ATC o il CAC","L'ente gestore dell'area protetta","La Regione"],c:1},
+  {d:"Qual è lo scopo principale per cui si costituiscono le oasi di protezione?",a:["Per proteggere un territorio dall'urbanizzazione","Per sfruttare in maniera pianificata le risorse forestali","Per salvaguardare la fauna selvatica e favorirne sosta e riproduzione"],c:2},
+  {d:"Cosa è il riso crodo?",a:["Un'infestante del riso","Una pregiata varietà di riso piemontese","Una pregiata varietà di riso della Lomellina"],c:0},
+  {d:"Quale delle seguenti azioni si può definire come distruzione di un ecosistema?",a:["L'inquinamento di un lago","Il danneggiamento di una coltura in atto","Il danneggiamento di un vigneto"],c:0},
+  {d:"Se un beccaccino si posa in una marcita, cosa si deve fare?",a:["Si incita il cane a entrare in marcita a cercarlo","Si entra in marcita insieme al cane","Si chiama il cane al piede e ci si allontana"],c:2},
+  {d:"La conservazione dell'ambiente di chi è interesse?",a:["Dei cacciatori","Degli ambientalisti","Di tutti"],c:2},
+  {d:"Quale tra i seguenti tipi di coltura è preferita come pastura dal fagiano?",a:["Il trifoglio","La barbabietola","Il mais"],c:2},
+  {d:"Quali specie di uccelli danneggiano maggiormente le semine di cereali?",a:["Quelle predatrici","Quelle granivore","Quelle insettivore"],c:1},
+  {d:"È consentito cacciare negli oliveti?",a:["No, mai","Solo dopo il raccolto","Sempre"],c:1},
+  {d:"Quale delle seguenti specie può dirsi utile all'agricoltura?",a:["Lo storno","Il coniglio selvatico","La pispola"],c:2},
+  {d:"Quali di queste sostanze sono più dannose per la fauna selvatica?",a:["I concimi organici","I diserbanti","I rifiuti solidi urbani"],c:1},
+  {d:"Nei frutteti quando si può cacciare?",a:["Sempre","Solo dopo il raccolto","Mai"],c:1},
+  {d:"L'agricoltore che subisce danni dalla fauna selvatica cosa deve fare?",a:["Eliminare gli animali che provocano il danno","Avvelenare il campo danneggiato","Fare domanda di indennizzo danni all'ente competente"],c:2},
+  {d:"Qual è la scienza che studia le relazioni tra gli esseri viventi e l'ambiente?",a:["L'etologia","La biologia","L'ecologia"],c:2},
+  {d:"Qual è la scienza che studia il comportamento degli animali?",a:["L'etologia","L'ecologia","La biologia"],c:0},
+  {d:"Si può cacciare in una stoppia di mais?",a:["Sì, sempre","No","Sì, ma solo se trinciata"],c:0},
+  {d:"In che mesi si raccoglie il frumento?",a:["Giugno/luglio","Ottobre/novembre","Novembre/dicembre"],c:0},
+  {d:"Da quale specie di avifauna è danneggiata la produzione di ciliegie?",a:["Dallo storno","Dal tordo bottaccio","Dal fringuello"],c:0},
+  {d:"Un cacciatore col cane attraversando un vigneto con uva matura cosa deve fare?",a:["Cacciare normalmente","Scaricare il fucile e tenere il cane al guinzaglio","Fermarsi nel vigneto attendendo che il cane faccia il proprio lavoro"],c:1},
+  {d:"Come è bene che siano tra loro gli agricoltori e i cacciatori?",a:["Alleati","Indifferenti","Avversari"],c:0},
+  {d:"Quale delle seguenti specie di uccelli è più utile all'agricoltura?",a:["La rondine","Il merlo","La passera mattugia"],c:0},
+  {d:"In quale stagione si falcia l'erba nelle marcite?",a:["Solo in estate","Solo in autunno","Tutto l'anno"],c:2},
+  {d:"Nei frutteti e nei vigneti in attualità di coltivazione, quale forma di caccia è consentita?",a:["All'aspetto","Vagante","Nessuna"],c:2},
+  {d:"Il mais tardivo in quale di questi mesi si raccoglie?",a:["Agosto","Ottobre","Novembre"],c:1},
+  {d:"Il mais da foraggio in quale mese solitamente si semina?",a:["Maggio","Luglio","Settembre"],c:0},
+  {d:"Il mais tardivo in quale mese solitamente si semina?",a:["Aprile","Febbraio","Gennaio"],c:0},
+  {d:"Il riso di solito in quale periodo si semina?",a:["Febbraio/marzo","Aprile/maggio","Luglio/agosto"],c:1},
+  {d:"Esiste la coltura del riso detta 'in asciutta'?",a:["Sì","No","Solo nelle vicinanze del Po"],c:0},
+  {d:"L'orzo è una coltura:",a:["Cerealicola","Erbacea","Oleaginosa"],c:0},
+  {d:"Quali piante in genere si possono utilizzare per costruire un appostamento temporaneo?",a:["Essenze arbustive di pregio","Residui di potature","Rami di piante da frutto"],c:1},
+  {d:"L'ortaglia quando è in attualità di coltivazione?",a:["Sempre","Mai","Solo dopo l'irrigazione"],c:0},
+  {d:"Cos'è la riserva naturale regionale?",a:["Un'area naturale protetta sempre a divieto di caccia","Una zona dove caccia solo il concessionario della riserva","Una zona di ripopolamento faunistico"],c:0},
+  {d:"Un parco naturale per quali esigenze può nascere?",a:["Per tutelare determinati interessi sia pubblici che privati","Per richiamare turisti e visitatori","Per la difesa e conservazione della natura"],c:2},
+  {d:"Che cos'è un incolto?",a:["Una coltivazione in atto","Un terreno non coltivato","Un vivaio poco curato"],c:1},
+  {d:"Quando l'uva è matura si può entrare a caccia in un vigneto?",a:["No, perché c'è un frutto pendente","Sì","Sì, solo per la caccia all'aspetto"],c:0},
+  {d:"Le colture cerealicole quando sono in attualità di coltivazione?",a:["Al momento della semina","Al momento del raccolto","Dal momento della semina al raccolto"],c:2},
+  {d:"Quale dei seguenti ungulati può essere più dannoso per il rinnovamento forestale?",a:["Il camoscio","Il muflone","Il capriolo"],c:2},
+  {d:"Come si chiamano i residui in campo del mais dopo il raccolto?",a:["Steli","Stocchi","Fusti"],c:1},
+  {d:"Quando di norma si raccoglie la soia?",a:["Luglio/agosto","Settembre/ottobre","Dicembre"],c:1},
+  {d:"Da quali delle seguenti specie sono molto ricercati i semi maturi del girasole?",a:["Da tortora e colombaccio","Da fagiano e starna","Da storno e merlo"],c:0},
+  {d:"Quale di queste colture è un prato artificiale?",a:["Una marcita","Un pascolo","Un prato stabile"],c:0},
+  {d:"Quanti sfalci d'erba si possono fare all'anno in una marcita?",a:["Fino a otto","Due","Tre"],c:0},
+  {d:"Quante volte l'anno si taglia in genere l'erba in un prato alpino?",a:["Mai","Una volta","Tre volte"],c:1},
+  {d:"La paglia è tra i residui del raccolto per quale delle seguenti colture?",a:["Il riso","Il ravizzone","La soia"],c:0},
+  {d:"Il medicaio che tipo di prato è?",a:["Un prato naturale","Un prato artificiale","Una brughiera"],c:1},
+  {d:"Un campo di loietto che tipo di prato è?",a:["Un prato naturale","Un prato artificiale","Una brughiera"],c:1},
+  {d:"Quando si falcia l'erba medica?",a:["Quando le piantine sono secche","Quando le piantine sono in fioritura","Quando le piantine sono appena spuntate"],c:1},
+  {d:"Quale delle seguenti essenze arboree è alloctona e quindi se ne potrebbero usare rami per costruire un capanno?",a:["Quercia farnia","Acero campestre","Robinia"],c:2},
+  {d:"Quale coltivazione è tipica e molto diffusa nelle aree collinari dell'Oltrepo pavese?",a:["Vigna","Alberi da frutto","Cereali"],c:0},
+  {d:"Quali acque si usano in genere per una risaia?",a:["Acque salmastre","Acque dolci","Non fa differenza"],c:1},
+  {d:"Quale specie di avifauna può essere proficuamente cacciata in un medicaio da seme?",a:["Quaglia","Starna","Nessuna specie"],c:2},
+  {d:"Quando riconosci un medicaio da seme?",a:["Quando l'erba è appena spuntata","Quando l'erba è in piena fioritura","Quando il fiore è secco"],c:2},
+  {d:"Le risaie sono solitamente presenti in quali territori?",a:["Alta pianura asciutta","Pedecollinari","Bassa pianura irrigua"],c:2},
+  {d:"Si può cacciare in un terreno di recente rimboschimento?",a:["No, mai","Sì, sempre","Solo col consenso del proprietario del fondo"],c:0},
+  {d:"Un bosco di ontani è tipico di:",a:["Bassa e media collina","Pianura irrigua con corsi d'acqua","Pianura asciutta"],c:1},
+  {d:"La bruciatura delle stoppie per la fauna selvatica è:",a:["Dannosa","Vantaggiosa","Indifferente"],c:0},
+  {d:"Da chi vengono indennizzati i danni da cinghiale in una azienda faunistico-venatoria?",a:["Dalla Provincia competente","Dall'ATC o dal CAC","Dal concessionario dell'azienda"],c:2},
+  {d:"Se si danneggia una pianta da reddito con una fucilata, chi paga i danni?",a:["La Regione","Il Sindaco competente","Chi ha sparato"],c:2},
+  {d:"Perché sono importanti i miglioramenti ambientali fatti dagli ATC e dai CAC?",a:["Per incrementare i redditi delle aziende agricole","Per incrementare la biodiversità del territorio a caccia programmata","Per incrementare la biodiversità dei parchi e riserve naturali"],c:1},
+  {d:"Quale dei seguenti interventi di miglioramento ambientale è utile soprattutto per la stagione invernale?",a:["Il mantenimento in campo di colture a perdere","La creazione di punti di abbeverata","Il taglio di arbusti infestanti"],c:0},
+  {d:"Quali delle seguenti essenze arbustive è tipica delle zone alpine e produce bacche molto ricercate dagli uccelli?",a:["Sanguinello","Sambuco","Sorbo degli uccellatori"],c:2},
+  {d:"Quali delle seguenti colture è più favorevole alla presenza dell'allodola?",a:["Mais","Soia","Prato stabile"],c:2},
+  {d:"L'indennizzo in azienda agri-turistico venatoria dei danni causati dalla fauna selvatica alle colture agricole fa carico:",a:["Alla Regione","All'ATC","Al concessionario dell'azienda"],c:2},
+  {d:"Un terreno a risaia è in attualità di coltivazione quando la coltura è:",a:["In sommersione","Dalla semina al raccolto","In asciutta"],c:1},
+  {d:"Cosa s'intende per recupero ambientale mirato a una determinata specie selvatica?",a:["La ricostituzione di un ambiente della massima vocazionalità per quella determinata specie","La costruzione di un recinto per immettervi esemplari di una determinata specie","La bonifica di una zona umida per immettervi specie terricole"],c:0},
+  {d:"L'esercizio venatorio è vietato nei fondi chiusi da rete metallica di altezza:",a:["Superiore a 200 cm","Superiore a 150 cm","Non inferiore a 120 cm"],c:2},
+  {d:"In un fondo in attualità di coltivazione chi può esercitare la caccia?",a:["Solo il proprietario del fondo","Nessuno","Solo le guardie venatorie volontarie"],c:1},
+  {d:"Cosa si deve fare dei bossoli sparati?",a:["Vanno raccolti e portati via","Si possono abbandonare sul terreno","Devono essere sotterrati"],c:0},
+  {d:"Quale tra i seguenti tipi di colture subisce danni da una specie di avifauna frugivora?",a:["Una coltura di riso","Una coltura di orzo","Un vigneto"],c:2},
+  {d:"In quale dei seguenti ambienti è lecito esercitare la caccia?",a:["Vigneto con frutto pendente","Stoppia di mais","Coltivazione di soia"],c:1},
+  {d:"Chi ha il dovere di conservare l'ambiente?",a:["I naturalisti e gli ambientalisti","I cacciatori e gli agricoltori","Tutti i cittadini"],c:2},
+  {d:"I cani da caccia possono entrare in un appezzamento coltivato a riso prima del raccolto?",a:["No","Sì","Solo per recuperare un selvatico abbattuto"],c:0},
+  {d:"Il pioppeto è un bosco naturale?",a:["Sì","No","Solo nelle golene dei fiumi"],c:1},
+  {d:"Cosa s'intende per vocazionalità faunistica di un determinato territorio?",a:["L'idoneità di una realtà territoriale per determinate specie selvatiche","La preferenza di determinate specie a riprodursi in un dato territorio","Il rapporto tra maschi e femmine di una data specie in un determinato territorio"],c:0},
+  {d:"Quale delle seguenti specie di mammiferi può provocare gravi squilibri agli ecosistemi umidi?",a:["Riccio","Coniglio selvatico","Nutria"],c:2},
+  {d:"Quali specie selvatiche di solito causano maggiori squilibri nei nostri ecosistemi?",a:["Le specie autoctone","Le specie alloctone","Le specie indigene"],c:1},
+  {d:"Che cosa s'intende per vivaio arboreo?",a:["Un allevamento estensivo di piante","Un allevamento di avifauna arboricola","Una monocoltura intensiva di piante"],c:2},
+  {d:"Quale delle seguenti specie di uccelli può dirsi utile all'agricoltura?",a:["Il germano reale","Il fagiano","Il picchio rosso maggiore"],c:2},
+  {d:"Cos'è l'ornitologia?",a:["La scienza che studia gli uccelli","La scienza che studia i mammiferi","La scienza che studia uccelli e mammiferi"],c:0},
+  {d:"Il coniglio selvatico può arrecare danno alle colture agricole?",a:["No, mai","Sì, di frequente","Di rado"],c:1},
+  {d:"Un parco nazionale per quali esigenze può nascere?",a:["Per tutelare interessi privati sulle proprietà dei terreni","Per la difesa e conservazione della natura","Per garantire la difesa delle produzioni agricole tipiche"],c:1},
+  {d:"L'esercizio venatorio è vietato nei fondi recintati dove si pratica il pascolo del bestiame:",a:["Sempre","Mai","Solo quando vi è la presenza del bestiame"],c:0},
+  {d:"Quale delle seguenti specie selvatiche viene definita problematica a causa dei danni che arreca all'agricoltura?",a:["La lepre bruna europea","Il cinghiale","Il muflone"],c:1},
+  {d:"Le zone di ripopolamento e cattura a cosa sono destinate?",a:["A tutelare l'agricoltura","Alla riproduzione naturale e successiva cattura di fauna stanziale","Al rifugio e alla riproduzione della fauna selvatica in generale"],c:1},
+  {d:"La legge regionale lombarda prevede che l'attività venatoria sia consentita purché:",a:["Non arrechi danno alle produzioni agricole","Non arrechi disturbo alla cittadinanza","Non vada oltre il 31 gennaio di ogni anno"],c:0},
+  {d:"Quale tipo di coltura è preferita come pastura dal colombaccio?",a:["La soia","La barbabietola da zucchero","Il mais"],c:2},
+  {d:"Cosa si intende per 'catena alimentare'?",a:["L'insieme dei rapporti tra gli organismi di un ecosistema","L'abbondanza di alimenti nell'ambiente","La lotta per la sopravvivenza tra predatori e prede"],c:0},
+  {d:"Come si definiscono gli organismi alla base di ogni catena alimentare?",a:["Produttori","Consumatori","Decompositori"],c:0},
+  {d:"Come si manifesta principalmente, in molte specie di uccelli, il dimorfismo sessuale?",a:["Nelle diverse colorazioni del piumaggio","Nelle diverse abitudini di vita","Nelle diverse velocità del volo"],c:0},
+  {d:"In una catena alimentare, quali animali carnivori sono definiti 'superpredatori'?",a:["Quelli che si cibano di grandi erbivori","Quelli che si cibano di altri carnivori","Quelli che si cibano sia di erbivori che di altri carnivori"],c:2},
+  {d:"Perché i rapaci rispetto ad altri uccelli risentono maggiormente dell'effetto dell'inquinamento da diserbanti e insetticidi?",a:["Perché hanno un'alimentazione costituita in prevalenza da giovani nidiacei","Perché, trovandosi al vertice della catena alimentare, risentono del fenomeno di accumulo di tali veleni","Perché predano solo avifauna che si nutre di graminacee coltivate"],c:1},
+  {d:"Nei rapaci diurni dell'ordine Falconiformi, il maschio è:",a:["Più grande della femmina","Più piccolo della femmina","Più colorato della femmina"],c:1},
+  {d:"In una catena alimentare, la lepre comune è:",a:["Un consumatore","Un produttore","Un decompositore"],c:0},
+  {d:"In una catena alimentare, quale tra i seguenti carnivori è un 'superpredatore'?",a:["La volpe","La martora","Il lupo"],c:2}
+];
+
+// ── ENGINE (original logic preserved) ──
+// ── QUIZ ENGINE ──
+const TOTAL = 30;
+const TOTALS = SECTIONS.map(s=>s.q.length);
+const GRAND = TOTALS.reduce((a,b)=>a+b,0);
+const COUNTS = TOTALS.map(t=>Math.round(t/GRAND*TOTAL));
+// fix rounding to sum to 30
+let diff = TOTAL - COUNTS.reduce((a,b)=>a+b,0);
+let i=0; while(diff>0){COUNTS[i%5]++;diff--;i++;} while(diff<0){COUNTS[i%5]--;diff++;i++;}
+
+let quiz=[], answers=[], current=0, submitted=false;
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+function buildQuiz(){
+  quiz=[];
+  SECTIONS.forEach((sec,si)=>{
+    const n=COUNTS[si];
+    const pool=shuffle(sec.q).slice(0,n);
+    pool.forEach(q=>{
+      const opts=[...q.a];
+      const correct=opts[q.c];
+      const shuffled=shuffle(opts);
+      quiz.push({d:q.d, a:shuffled, c:shuffled.indexOf(correct), sec:sec.short});
+    });
+  });
+  quiz=shuffle(quiz);
+  answers=new Array(quiz.length).fill(null);
+  current=0;
+  submitted=false;
+}
+
+// ── UPDATED RENDER (with new UI) ──
+function updateTopbarProgress(cur, total, answered) {
+  const wrap = document.getElementById('topbar-progress');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  if (wrap) {
+    wrap.style.display = 'flex';
+    const pct = Math.round((answered / total) * 100);
+    fill.style.width = pct + '%';
+    label.textContent = answered + ' / ' + total;
+  }
+}
+
+function render(){
+  const app=document.getElementById('quiz-view');
+  if(submitted){renderResults(app);return;}
+  const q=quiz[current];
+  const ans=answers[current];
+  const letters=['A','B','C'];
+  const pct=Math.round(((current+1)/quiz.length)*100);
+  const answered = answers.filter(a=>a!==null).length;
+  updateTopbarProgress(current, quiz.length, answered);
+
+  const feedbackHtml = ans !== null
+    ? `<div class="feedback ${ans===q.c?'correct':'wrong'}">
+        <span class="feedback-icon">${ans===q.c?'✓':'✗'}</span>
+        <span>${ans===q.c ? 'Risposta corretta' : 'Risposta errata — La risposta corretta è ' + letters[q.c]}</span>
+       </div>`
+    : '';
+
+  const optsHtml = q.a.map((opt, i) => {
+    let cls = 'opt-btn';
+    if (ans !== null) {
+      if (i === q.c) cls += ' correct';
+      else if (i === ans && ans !== q.c) cls += ' wrong';
+    }
+    return `<button class="${cls}" onclick="answer(${i})" ${ans!==null?'disabled':''}><span class="opt-letter">${letters[i]}</span><span>${opt}</span></button>`;
+  }).join('');
+
+  const isLast = current === quiz.length - 1;
+  const allAnswered = answers.filter(a=>a===null).length === 0;
+
+  app.innerHTML = `
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="section-badge">${q.sec}</span>
+        <span class="q-num">Domanda ${current+1} di ${quiz.length}</span>
+      </div>
+      <div class="q-text">${q.d}</div>
+      ${optsHtml}
+      ${feedbackHtml}
+    </div>
+    <div class="nav-row">
+      <button class="nav-btn" onclick="go(-1)" ${current===0?'disabled':''}>← Indietro</button>
+      <span class="counter">${answered} / ${quiz.length}</span>
+      ${isLast
+        ? `<button class="nav-btn primary" onclick="finish()" ${!allAnswered?'disabled':''}>Termina ✓</button>`
+        : `<button class="nav-btn${ans!==null?' primary':''}" onclick="go(1)">Avanti →</button>`
+      }
+    </div>
+    ${isLast && !allAnswered ? `<p class="finish-hint">Rispondi a tutte le domande per terminare</p>` : ''}
+  `;
+}
+
+function answer(i){
+  if(answers[current]!==null)return;
+  answers[current]=i;
+  render();
+}
+
+function go(dir){
+  current=Math.max(0,Math.min(quiz.length-1,current+dir));
+  render();
+}
+
+function finish(){
+  submitted=true;
+  render();
+}
+
+function renderResults(app){
+  const wrong=answers.filter((a,i)=>a!==quiz[i].c).length;
+  const right=TOTAL-wrong;
+  const passed=wrong<=4;
+  const letters=['A','B','C'];
+  const wrongItems=quiz.map((q,i)=>({q,i,a:answers[i]})).filter(x=>x.a!==x.q.c);
+
+  const secStats={};
+  SECTIONS.forEach(s=>{secStats[s.short]={t:0,w:0};});
+  quiz.forEach((q,i)=>{
+    secStats[q.sec].t++;
+    if(answers[i]!==q.c)secStats[q.sec].w++;
+  });
+
+  // hide topbar progress on results
+  document.getElementById('topbar-progress').style.display = 'none';
+  saveExamResult(right, wrong, secStats);
+
+  const secBarsHtml = Object.entries(secStats).map(([name, s]) => {
+    const pct = Math.round((s.t - s.w) / s.t * 100);
+    const color = s.w === 0 ? '#639922' : (pct >= 70 ? '#2d7dd2' : '#c0392b');
+    return `<div class="sec-bar-row">
+      <span class="sec-bar-name">${name}</span>
+      <div class="sec-bar-track"><div class="sec-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+      <span class="sec-bar-score">${s.t-s.w}/${s.t}</span>
+    </div>`;
+  }).join('');
+
+  const reviewHtml = wrongItems.length > 0 ? `
+    <div class="review-section">
+      <div class="review-title">Domande errate — revisione</div>
+      ${wrongItems.map(x => `
+        <div class="review-item wrong-item">
+          <div class="review-q">${x.i+1}. ${x.q.d}</div>
+          <div class="review-ans">La tua risposta: <span class="w">${letters[x.a]}. ${x.q.a[x.a]}</span></div>
+          <div class="review-ans">Risposta corretta: <span class="c">${letters[x.q.c]}. ${x.q.a[x.q.c]}</span></div>
+        </div>`).join('')}
+    </div>` : '';
+
+  app.innerHTML = `
+    <div class="results-header">
+      <div class="results-title">Risultati simulazione</div>
+      <div class="verdict ${passed?'pass':'fail'}">${passed ? 'PROMOSSO' : 'BOCCIATO'}</div>
+      <div class="verdict-sub">${passed
+        ? `Complimenti! ${wrong} error${wrong===1?'e':'i'} su 30 (massimo consentito: 4)`
+        : `${wrong} errori su 30 — superato il limite massimo di 4`}</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-num" style="color:var(--accent)">${right}</div><div class="stat-lbl">Corrette</div></div>
+      <div class="stat-card"><div class="stat-num" style="color:var(--danger)">${wrong}</div><div class="stat-lbl">Errate</div></div>
+      <div class="stat-card"><div class="stat-num">${Math.round(right/TOTAL*100)}%</div><div class="stat-lbl">Punteggio</div></div>
+    </div>
+    <div class="section-stats">
+      <div class="section-stats-title">Risultati per sezione</div>
+      ${secBarsHtml}
+    </div>
+    ${reviewHtml}
+    <button class="btn-restart" onclick="restart()">Nuova simulazione ↺</button>
+  `;
+}
+
+function restart(){
+  buildQuiz();
+  render();
+}
+
+buildQuiz();
+render();
+
+// ── WELCOME SCREEN ──
+function renderWelcome() {
+  document.getElementById('topbar-progress').style.display = 'none';
+  const sec = SECTIONS.map((s, i) => {
+    const n = COUNTS[i];
+    return `<div class="section-row"><span class="section-row-name">${s.name}</span><span class="section-row-count">${n} domande</span></div>`;
+  }).join('');
+
+  document.getElementById('quiz-view').innerHTML = `
+    <div class="welcome">
+      <span class="welcome-icon">🦆</span>
+      <h1 class="welcome-title">Simulatore Esame Abilitazione Venatoria</h1>
+      <p class="welcome-sub">Prova basata sul programma ufficiale della Sezione di Pavia. 30 domande distribuite proporzionalmente su 5 materie. Massimo 4 errori per superare l'esame.</p>
+      <div class="info-grid">
+        <div class="info-tile"><div class="info-tile-num">30</div><div class="info-tile-lbl">Domande</div></div>
+        <div class="info-tile"><div class="info-tile-num">≤ 4</div><div class="info-tile-lbl">Errori consentiti</div></div>
+        <div class="info-tile"><div class="info-tile-num">546</div><div class="info-tile-lbl">Domande in banca</div></div>
+        <div class="info-tile"><div class="info-tile-num">5</div><div class="info-tile-lbl">Materie</div></div>
+      </div>
+      <div class="sections-list">
+        <div class="sections-list-title">Composizione del test</div>
+        ${sec}
+      </div>
+      <button class="btn-primary" onclick="startExam()">Inizia simulazione →</button>
+    </div>
+  `;
+}
+
+function startExam() {
+  buildQuiz();
+  render();
+}
+
+function renderContenuti() {
+  const app = document.getElementById('quiz-view');
+  if (!CONTENT_FILES.length) {
+    app.innerHTML = `
+      <div class="contenuti-page">
+        <div class="stats-page-title">Contenuti</div>
+        <p class="stats-page-sub">Nessun file disponibile. Aggiungi i PDF nella cartella dell'app.</p>
+      </div>`;
+    return;
+  }
+  const listHtml = CONTENT_FILES.map((file, idx) => `
+      <button class="contenuti-file${idx === selectedPdfIndex ? ' active' : ''}" onclick="selectPdf(${idx})">
+        ${file.title}
+      </button>
+    `).join('');
+  const current = CONTENT_FILES[selectedPdfIndex];
+  app.innerHTML = `
+    <div class="contenuti-page">
+      <div class="stats-page-title">Contenuti</div>
+      <p class="stats-page-sub">Apri i PDF direttamente nell'app e visualizzali così come sono.</p>
+      <div class="contenuti-list">${listHtml}</div>
+      <div class="pdf-viewer">
+        <iframe class="pdf-embed" src="${encodeURI(current.url)}" title="${current.title}" loading="lazy"></iframe>
+      </div>
+    </div>`;
+}
+
+function selectPdf(index) {
+  selectedPdfIndex = index;
+  renderContenuti();
+}
+
+// ── OFFLINE / PWA ──
+window.addEventListener('online',  () => document.body.classList.remove('offline'));
+window.addEventListener('offline', () => document.body.classList.add('offline'));
+if (!navigator.onLine) document.body.classList.add('offline');
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner').classList.remove('show');
+});
+document.getElementById('install-close').addEventListener('click', () => {
+  document.getElementById('install-banner').classList.remove('show');
+});
+
+// ── SERVICE WORKER (GitHub Pages compatible) ──
+// Registers a SW from an auto-generated sw.js if available,
+// otherwise caches the page directly for offline use.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Try registering sw.js in same directory (works when deployed)
+    navigator.serviceWorker.register('./sw.js').catch(() => {
+      // Fallback: cache current page manually for offline
+      if ('caches' in window) {
+        caches.open('esame-venatorio-v1').then(cache => {
+          cache.add(location.href).catch(() => {});
+        });
+      }
+    });
+  });
+}
+
+// ── MANIFEST (inline) ──
+const manifest = {
+  name: 'Simulatore Esame Venatorio Lombardia',
+  short_name: 'Esame Venatorio',
+  description: 'Simulatore esame abilitazione venatoria Lombardia — Sezione di Pavia',
+  start_url: '.',
+  display: 'standalone',
+  background_color: '#f7f5f0',
+  theme_color: '#1a1a18',
+  icons: [
+    { src: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦆</text></svg>', sizes: '192x192', type: 'image/svg+xml' }
+  ]
+};
+const mLink = document.createElement('link');
+mLink.rel = 'manifest';
+mLink.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
+document.head.appendChild(mLink);
+
+
+
+// ══════════════════════════════════════════
+// AUTH SYSTEM
+// ══════════════════════════════════════════
+
+// ── Admin credentials ──
+const ADMIN_USER = 'apriti';
+const ADMIN_PASS = 'sesamo';
+
+// ── Base users (hardcoded, always available) ──
+const BASE_USERS = [
+  { username: 'jordi', code: '23697' }
+];
+
+// ── localStorage keys ──
+const USERS_KEY = 'venatorio_users_v1';
+const SESSION_KEY = 'venatorio_session_v1';
+
+// ── Load extra users from localStorage ──
+function loadExtraUsers() {
+  try { return JSON.parse(localStorage.getItem(USERS_KEY)) || []; }
+  catch(e) { return []; }
+}
+
+// ── Save extra users ──
+function saveExtraUsers(list) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(list));
+}
+
+// ── All authorized users (base + extra) ──
+function getAllUsers() {
+  const extra = loadExtraUsers();
+  return [
+    ...BASE_USERS.map(u => ({ ...u, type: 'base' })),
+    ...extra.map(u => ({ ...u, type: 'added' }))
+  ];
+}
+
+// ── Check if session exists (user already logged in) ──
+function checkSession() {
+  try {
+    const s = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+    return s && s.username ? s : null;
+  } catch(e) { return null; }
+}
+
+// ── Attempt login ──
+function attemptLogin() {
+  const username = document.getElementById('login-username').value.trim();
+  const code     = document.getElementById('login-password').value.trim();
+  const errEl    = document.getElementById('login-error');
+
+  // Check admin
+  if (username === ADMIN_USER && code === ADMIN_PASS) {
+    errEl.classList.remove('show');
+    openAdmin();
+    return;
+  }
+
+  // Check regular users (case-insensitive username, exact code)
+  const match = getAllUsers().find(
+    u => u.username.toLowerCase() === username.toLowerCase() && u.code === code
+  );
+
+  if (match) {
+    errEl.classList.remove('show');
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify({ username: match.username }));
+    hideLogo();
+    document.getElementById('login-screen').style.display = 'none';
+  } else {
+    errEl.classList.add('show');
+    document.getElementById('login-password').value = '';
+    document.getElementById('login-password').focus();
+  }
+}
+
+// ── Enter key on login ──
+function setupLoginKeys() {
+  ['login-username','login-password'].forEach(id => {
+    document.getElementById(id).addEventListener('keydown', e => {
+      if (e.key === 'Enter') attemptLogin();
+    });
+  });
+}
+
+// ── Hide login screen if session valid ──
+function initAuth() {
+  const session = checkSession();
+  if (session) {
+    document.getElementById('login-screen').style.display = 'none';
+  }
+  setupLoginKeys();
+}
+
+// ── ADMIN PANEL ──
+function openAdmin() {
+  document.getElementById('admin-screen').classList.add('open');
+  renderAdminTable();
+}
+
+function closeAdmin() {
+  document.getElementById('admin-screen').classList.remove('open');
+  // clear login fields
+  document.getElementById('login-username').value = '';
+  document.getElementById('login-password').value = '';
+}
+
+function renderAdminTable() {
+  const users = getAllUsers();
+  const tbody = document.getElementById('admin-user-tbody');
+  tbody.innerHTML = users.map((u, i) => `
+    <tr>
+      <td><strong>${escHtml(u.username)}</strong></td>
+      <td style="font-family:monospace;font-size:12px;color:var(--ink-mid)">${escHtml(u.code)}</td>
+      <td><span class="user-tag ${u.type}">${u.type === 'base' ? 'Base' : 'Aggiunto'}</span></td>
+      <td>
+        <button class="admin-del-btn" ${u.type === 'base' ? 'disabled title="Gli utenti base sono nel codice"' : ''}
+          onclick="adminDeleteUser(${i})">
+          Rimuovi
+        </button>
+      </td>
+    </tr>`).join('');
+}
+
+function adminAddUser() {
+  const uEl = document.getElementById('admin-new-user');
+  const cEl = document.getElementById('admin-new-code');
+  const username = uEl.value.trim();
+  const code     = cEl.value.trim();
+
+  if (!username || !code) {
+    alert('Inserisci sia il nome utente che il codice di sicurezza.');
+    return;
+  }
+
+  // Check duplicate
+  const all = getAllUsers();
+  if (all.find(u => u.username.toLowerCase() === username.toLowerCase())) {
+    alert('Esiste già un utente con questo nome.');
+    return;
+  }
+
+  const extra = loadExtraUsers();
+  extra.push({ username, code });
+  saveExtraUsers(extra);
+
+  uEl.value = '';
+  cEl.value = '';
+
+  const succ = document.getElementById('admin-success');
+  succ.classList.add('show');
+  setTimeout(() => succ.classList.remove('show'), 3000);
+
+  renderAdminTable();
+}
+
+function adminDeleteUser(globalIndex) {
+  // globalIndex is index into getAllUsers() — only 'added' users can be deleted
+  const all = getAllUsers();
+  const user = all[globalIndex];
+  if (!user || user.type === 'base') return;
+  if (!confirm("Rimuovere l'utente \"" + user.username + "\"?")) return;
+
+  const extra = loadExtraUsers().filter(u => u.username !== user.username);
+  saveExtraUsers(extra);
+  renderAdminTable();
+}
+
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function hideLogo() {
+  // nothing needed, login screen hidden via display:none
+}
+
+// ── STORAGE: persist exam results ──
+const STORAGE_KEY = 'venatorio_stats_v1';
+
+function loadStats() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || { exams: [] };
+  } catch(e) { return { exams: [] }; }
+}
+
+function saveExamResult(right, wrong, secStats) {
+  const db = loadStats();
+  db.exams.push({
+    ts: Date.now(),
+    right,
+    wrong,
+    passed: wrong <= 4,
+    secStats: Object.fromEntries(
+      Object.entries(secStats).map(([k,v]) => [k, { t: v.t, w: v.w }])
+    )
+  });
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+}
+
+function clearStats() {
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+// ── NAV MENU ──
+let currentPage = 'home';
+
+function navTo(page) {
+  currentPage = page;
+  closeNavMenu();
+  // update active state
+  document.querySelectorAll('.nav-dropdown-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-item-' + page).classList.add('active');
+  document.getElementById('nav-menu-label').textContent =
+    page === 'home' ? 'Home' :
+    page === 'stats' ? 'Statistiche' :
+    page === 'contenuti' ? 'Contenuti' :
+    'Menu';
+  // hide progress bar on non-quiz pages
+  if (page !== 'quiz') {
+    document.getElementById('topbar-progress').style.display = 'none';
+  }
+  if (page === 'home') renderWelcome();
+  if (page === 'stats') renderStats();
+  if (page === 'contenuti') renderContenuti();
+}
+
+function openNavMenu() {
+  document.getElementById('nav-dropdown').classList.add('open');
+  document.getElementById('nav-menu-chevron').style.transform = 'rotate(180deg)';
+}
+function closeNavMenu() {
+  document.getElementById('nav-dropdown').classList.remove('open');
+  document.getElementById('nav-menu-chevron').style.transform = '';
+}
+function toggleNavMenu() {
+  const dd = document.getElementById('nav-dropdown');
+  if (dd.classList.contains('open')) closeNavMenu(); else openNavMenu();
+}
+document.addEventListener('click', e => {
+  if (!document.getElementById('nav-menu-wrap').contains(e.target)) closeNavMenu();
+});
+
+// ── STATS PAGE ──
+function renderStats() {
+  const app = document.getElementById('quiz-view');
+  const db = loadStats();
+  const exams = db.exams;
+
+  if (exams.length === 0) {
+    app.innerHTML = `
+      <div class="stats-page">
+        <div class="stats-page-title">Statistiche</div>
+        <p class="stats-page-sub">I dati si aggiornano al completamento di ogni simulazione.</p>
+        <div class="stats-empty">
+          <span class="stats-empty-icon">📊</span>
+          Nessuna simulazione completata ancora.<br>
+          Completa il primo esame per vedere le statistiche!
+        </div>
+      </div>`;
+    return;
+  }
+
+  const totalExams = exams.length;
+  const avgErrors = (exams.reduce((s,e) => s+e.wrong, 0) / totalExams).toFixed(1);
+  const passRate  = Math.round(exams.filter(e=>e.passed).length / totalExams * 100);
+  const lastExam  = exams[exams.length - 1];
+  const lastErrors = lastExam.wrong;
+
+  // Trend: compare last 3 vs previous 3
+  let trendHtml = '';
+  if (exams.length >= 2) {
+    const recent = exams.slice(-3).reduce((s,e)=>s+e.wrong,0) / Math.min(3,exams.length);
+    const older  = exams.slice(-6,-3).length
+      ? exams.slice(-6,-3).reduce((s,e)=>s+e.wrong,0) / exams.slice(-6,-3).length
+      : recent;
+    const diff = recent - older;
+    if (diff < -0.5)      trendHtml = `<span class="trend-badge up">▲ in miglioramento</span>`;
+    else if (diff > 0.5)  trendHtml = `<span class="trend-badge down">▼ in peggioramento</span>`;
+    else                  trendHtml = `<span class="trend-badge flat">→ stabile</span>`;
+  }
+
+  // Per-section aggregated stats
+  const secAgg = {};
+  exams.forEach(exam => {
+    Object.entries(exam.secStats || {}).forEach(([name, s]) => {
+      if (!secAgg[name]) secAgg[name] = { t: 0, w: 0 };
+      secAgg[name].t += s.t;
+      secAgg[name].w += s.w;
+    });
+  });
+
+  const secList = Object.entries(secAgg).map(([name, s]) => ({
+    name,
+    pct: Math.round((s.t - s.w) / s.t * 100),
+    t: s.t, w: s.w
+  })).sort((a,b) => b.pct - a.pct);
+
+  // Strength / Weakness
+  const strengths = secList.slice(0,2);
+  const weaknesses = [...secList].sort((a,b) => a.pct - b.pct).slice(0,2);
+
+  function secColor(pct) {
+    if (pct >= 80) return '#639922';
+    if (pct >= 60) return '#2d7dd2';
+    return '#c0392b';
+  }
+
+  const secBarsHtml = secList.map(s => `
+    <div class="section-acc-row">
+      <span class="section-acc-name">${s.name}</span>
+      <div class="section-acc-track">
+        <div class="section-acc-fill" style="width:${s.pct}%;background:${secColor(s.pct)}"></div>
+      </div>
+      <span class="section-acc-pct" style="color:${secColor(s.pct)}">${s.pct}%</span>
+    </div>`).join('');
+
+  const strengthHtml = strengths.map(s =>
+    `<div class="sw-item"><span>${s.name}</span><span class="sw-item-pct" style="color:var(--accent)">${s.pct}%</span></div>`
+  ).join('');
+  const weaknessHtml = weaknesses.map(s =>
+    `<div class="sw-item"><span>${s.name}</span><span class="sw-item-pct" style="color:var(--danger)">${s.pct}%</span></div>`
+  ).join('');
+
+  // ── LINE CHART: errori per simulazione ──
+  const chartW = 560, chartH = 140, pad = { t:10, r:10, b:28, l:28 };
+  const innerW = chartW - pad.l - pad.r;
+  const innerH = chartH - pad.t - pad.b;
+  const errorValues = exams.map(e => e.wrong);
+  const maxErr = Math.max(...errorValues, 6);
+  const toX = i => pad.l + (i / Math.max(errorValues.length-1,1)) * innerW;
+  const toY = v => pad.t + innerH - (v / maxErr) * innerH;
+
+  // Threshold line at y=4
+  const threshY = toY(4);
+
+  const points = errorValues.map((v,i) => `${toX(i)},${toY(v)}`).join(' ');
+  const areaPoints = `${toX(0)},${toY(0)} ` + errorValues.map((v,i) => `${toX(i)},${toY(v)}`).join(' ') + ` ${toX(errorValues.length-1)},${toY(0)}`;
+
+  // Dots
+  const dotsHtml = errorValues.map((v,i) => {
+    const col = v <= 4 ? '#639922' : '#c0392b';
+    return `<circle cx="${toX(i)}" cy="${toY(v)}" r="4" fill="${col}" stroke="white" stroke-width="1.5"/>`;
+  }).join('');
+
+  // Y axis labels
+  const yLabels = [0, 2, 4, 6].filter(v => v <= maxErr + 1).map(v =>
+    `<text x="${pad.l - 5}" y="${toY(v) + 4}" text-anchor="end" font-size="9" fill="#aaa">${v}</text>`
+  ).join('');
+
+  // X axis labels (show every Nth exam)
+  const step = Math.max(1, Math.ceil(errorValues.length / 6));
+  const xLabels = errorValues.map((v,i) => {
+    if (i % step !== 0 && i !== errorValues.length-1) return '';
+    return `<text x="${toX(i)}" y="${chartH - 4}" text-anchor="middle" font-size="9" fill="#aaa">${i+1}</text>`;
+  }).join('');
+
+  const lineChartSvg = `
+    <svg class="chart-svg" viewBox="0 0 ${chartW} ${chartH}" xmlns="http://www.w3.org/2000/svg">
+      <!-- grid -->
+      ${[0,2,4,6].filter(v=>v<=maxErr+1).map(v =>
+        `<line x1="${pad.l}" y1="${toY(v)}" x2="${chartW-pad.r}" y2="${toY(v)}"
+               stroke="#f0ede6" stroke-width="1" stroke-dasharray="${v===4?'4,3':''}"/>`
+      ).join('')}
+      <!-- threshold label -->
+      <text x="${chartW - pad.r - 2}" y="${threshY - 4}" text-anchor="end" font-size="9" fill="#c0392b" opacity="0.7">soglia 4</text>
+      <!-- area -->
+      <polygon points="${areaPoints}" fill="#3B6D11" opacity="0.07"/>
+      <!-- line -->
+      <polyline points="${points}" fill="none" stroke="#3B6D11" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <!-- dots -->
+      ${dotsHtml}
+      <!-- axes -->
+      ${yLabels}
+      ${xLabels}
+      <!-- axis lines -->
+      <line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+innerH}" stroke="#e0ddd6" stroke-width="1"/>
+      <line x1="${pad.l}" y1="${pad.t+innerH}" x2="${pad.l+innerW}" y2="${pad.t+innerH}" stroke="#e0ddd6" stroke-width="1"/>
+    </svg>`;
+
+  // ── BAR CHART: passato/fallito per simulazione (last 10) ──
+  const recent10 = exams.slice(-10);
+  const barW = 560, barH = 80;
+  const barPad = { t:4, r:10, b:20, l:28 };
+  const bInnerW = barW - barPad.l - barPad.r;
+  const bInnerH = barH - barPad.t - barPad.b;
+  const barCount = recent10.length;
+  const barWidth = Math.floor(bInnerW / barCount) - 4;
+  const bMaxErr = Math.max(...recent10.map(e=>e.wrong), 6);
+  const bToY = v => barPad.t + bInnerH - (v / bMaxErr) * bInnerH;
+  const bBarsHtml = recent10.map((e, i) => {
+    const x = barPad.l + i * (bInnerW / barCount) + 2;
+    const h = Math.max(2, (e.wrong / bMaxErr) * bInnerH);
+    const y = barPad.t + bInnerH - h;
+    const col = e.wrong <= 4 ? '#639922' : '#c0392b';
+    const labelN = exams.length - recent10.length + i + 1;
+    return `<rect x="${x}" y="${y}" width="${barWidth}" height="${h}" fill="${col}" rx="2" opacity="0.85"/>
+            <text x="${x + barWidth/2}" y="${barH - 4}" text-anchor="middle" font-size="9" fill="#aaa">${labelN}</text>`;
+  }).join('');
+
+  const barChartSvg = `
+    <svg class="chart-svg" viewBox="0 0 ${barW} ${barH}" xmlns="http://www.w3.org/2000/svg">
+      ${[0,2,4,6].filter(v=>v<=bMaxErr+1).map(v=>
+        `<line x1="${barPad.l}" y1="${bToY(v)}" x2="${barW-barPad.r}" y2="${bToY(v)}"
+               stroke="#f0ede6" stroke-width="1" stroke-dasharray="${v===4?'4,3':''}"/>`
+      ).join('')}
+      ${bBarsHtml}
+      ${[0,2,4].filter(v=>v<=bMaxErr+1).map(v=>
+        `<text x="${barPad.l-5}" y="${bToY(v)+4}" text-anchor="end" font-size="9" fill="#aaa">${v}</text>`
+      ).join('')}
+      <line x1="${barPad.l}" y1="${barPad.t}" x2="${barPad.l}" y2="${barPad.t+bInnerH}" stroke="#e0ddd6" stroke-width="1"/>
+      <line x1="${barPad.l}" y1="${barPad.t+bInnerH}" x2="${barPad.l+bInnerW}" y2="${barPad.t+bInnerH}" stroke="#e0ddd6" stroke-width="1"/>
+    </svg>`;
+
+  // ── KPI color logic ──
+  const avgNum = parseFloat(avgErrors);
+  const avgClass = avgNum <= 3 ? 'good' : avgNum <= 5 ? 'warn' : 'bad';
+  const passClass = passRate >= 70 ? 'good' : passRate >= 40 ? 'warn' : 'bad';
+
+  app.innerHTML = `
+    <div class="stats-page">
+      <div class="stats-page-title">Statistiche ${trendHtml}</div>
+      <p class="stats-page-sub">${totalExams} simulazion${totalExams===1?'e':'i'} completat${totalExams===1?'a':'e'}</p>
+
+      <div class="kpi-grid">
+        <div class="kpi-tile">
+          <div class="kpi-num ${avgClass}">${avgErrors}</div>
+          <div class="kpi-lbl">Errori medi / sim.</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-num ${passClass}">${passRate}%</div>
+          <div class="kpi-lbl">Tasso di superamento</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-num">${lastErrors}</div>
+          <div class="kpi-lbl">Errori ultima sim.</div>
+        </div>
+        <div class="kpi-tile">
+          <div class="kpi-num">${totalExams}</div>
+          <div class="kpi-lbl">Simulazioni totali</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-title">Andamento errori per simulazione</div>
+        ${lineChartSvg}
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-title">Ultime ${recent10.length} simulazioni (errori per barra)</div>
+        ${barChartSvg}
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-card-title">Precisione per sezione (media storica)</div>
+        ${secBarsHtml}
+      </div>
+
+      <div class="strength-weakness">
+        <div class="sw-card strength">
+          <div class="sw-title">💪 Punti di forza</div>
+          ${strengthHtml}
+        </div>
+        <div class="sw-card weakness">
+          <div class="sw-title">⚠️ Da studiare</div>
+          ${weaknessHtml}
+        </div>
+      </div>
+
+      <button class="btn-clear" onclick="if(confirm('Cancellare tutti i dati statistici?')){clearStats();renderStats();}">
+        🗑 Cancella tutti i dati statistici
+      </button>
+    </div>`;
+}
+
+// ── INIT ──
+document.getElementById('nav-menu-btn').addEventListener('click', toggleNavMenu);
+initAuth();
+renderWelcome();
+</script>
+</body>
+</html>
